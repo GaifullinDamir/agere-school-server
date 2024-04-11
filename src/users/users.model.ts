@@ -42,8 +42,4 @@ export class User extends Model<User, UserCreationAttributes> {
     @ApiProperty({example: 'password', description: 'Пароль пользователя.'})
     @Column({type: DataType.STRING, allowNull: false})
     password: string;
-
-    @ApiProperty({example: 'student', description: 'Роль пользователя.'})
-    @Column({type: DataType.STRING, allowNull: false})
-    role: string;
 }
