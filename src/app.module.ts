@@ -5,10 +5,12 @@ import { ConfigModule } from "@nestjs/config";
 import { User } from "./users/users.model";
 import { RolesService } from './roles/roles.service';
 import { RolesModule } from './roles/roles.module';
+import { Role } from "./roles/roles.model";
+import { UserRoles } from "./roles/user-roles.model";
 
 @Module({
     controllers: [],
-    providers: [RolesService],
+    providers: [],
     imports: [
         ConfigModule.forRoot({
             envFilePath: `.${process.env.NODE_ENV}.env`
@@ -20,7 +22,7 @@ import { RolesModule } from './roles/roles.module';
           username: process.env.POSTGRES_USERNAME,
           password: process.env.POSTGRES_PASSWORD ,
           database: process.env.POSTGRES_DATABASE,
-          models: [User],
+          models: [User, Role, UserRoles],
           autoLoadModels: true
         }),
         UsersModule,
