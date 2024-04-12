@@ -1,10 +1,11 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { RolesController } from './roles.controller';
 import { Role } from './roles.model';
 import { RolesService } from './roles.service';
 import { User } from 'src/users/users.model';
 import { UserRoles } from './user-roles.model';
+import { SetUuidMiddleware } from 'src/middlewares/set-uuid.middleware';
 
 @Module({
   providers: [RolesService],
@@ -14,4 +15,12 @@ import { UserRoles } from './user-roles.model';
   ],
   exports: [RolesService]
 })
-export class RolesModule {}
+export class RolesModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(SetUuidMiddleware)
+      .forRoutes({
+        path: 'roles',
+        method: RequestMethod.POST
+      })
+  }
+}
