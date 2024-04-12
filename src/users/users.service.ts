@@ -13,12 +13,16 @@ export class UsersService {
     async createUser(dto: CreateUserDto) {
         const user = await this.userRepository.create(dto);
         const role = await this.roleService.getRoleByValue("user");
+
+        // $set - перезаписывает какое-то поле в базе данных и сразу присвоить ему значение.
         await user.$set('roles', [role.id]);
         return user;
     }
 
     async getAllUsers() {
-        const users = await this.userRepository.findAll();
+        const users = await this.userRepository.findAll({
+            include: {all: true}
+        });
         return users;
     }
 }
