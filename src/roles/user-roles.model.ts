@@ -1,4 +1,4 @@
-import { Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { AutoIncrement, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { User } from "src/users/users.model";
 import { Role } from "./roles.model";
 
@@ -8,8 +8,8 @@ import { Role } from "./roles.model";
     updatedAt: false
 })
 export class UserRoles extends Model<UserRoles> {
-    @Column({type: DataType.UUID, unique: true, primaryKey: true})
-    id: string;
+    @Column({type: DataType.INTEGER, autoIncrement: true, unique: true, primaryKey: true})
+    id: number;
 
     @ForeignKey(() => Role)
     @Column({type: DataType.UUID})
