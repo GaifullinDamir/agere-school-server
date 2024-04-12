@@ -13,7 +13,8 @@ import { SetUuidMiddleware } from 'src/middlewares/set-uuid.middleware';
   imports: [
     SequelizeModule.forFeature([User, Role]),
     RolesModule
-  ]
+  ],
+  exports: [UsersService]
 })
 export class UsersModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

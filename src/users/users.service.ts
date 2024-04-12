@@ -16,6 +16,7 @@ export class UsersService {
 
         // $set - перезаписывает какое-то поле в базе данных и сразу присвоить ему значение.
         await user.$set('roles', [role.id]);
+        user.roles = [role];
         return user;
     }
 
@@ -24,5 +25,13 @@ export class UsersService {
             include: {all: true}
         });
         return users;
+    }
+
+    async getUserByEmail(email: string) {
+        const user = await this.userRepository.findOne({
+            where:{email},
+            include: {all: true}
+        });
+        return user;
     }
 }
