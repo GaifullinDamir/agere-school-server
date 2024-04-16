@@ -8,9 +8,12 @@ import { RolesModule } from './roles/roles.module';
 import { Role } from "./roles/roles.model";
 import { UserRoles } from "./roles/user-roles.model";
 import { AuthModule } from './auth/auth.module';
+import { CoursesController } from './courses/courses.controller';
+import { CoursesModule } from './courses/courses.module';
+import { Course } from "./courses/courses.model";
 
 @Module({
-    controllers: [],
+    controllers: [CoursesController],
     providers: [],
     imports: [
         ConfigModule.forRoot({
@@ -23,12 +26,13 @@ import { AuthModule } from './auth/auth.module';
           username: process.env.POSTGRES_USERNAME,
           password: process.env.POSTGRES_PASSWORD ,
           database: process.env.POSTGRES_DATABASE,
-          models: [User, Role, UserRoles],
+          models: [User, Role, UserRoles, Course],
           autoLoadModels: true
         }),
         UsersModule,
         RolesModule,
         AuthModule,
+        CoursesModule,
       ]
 })
 export class AppModule {
