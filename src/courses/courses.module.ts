@@ -5,20 +5,33 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from 'src/users/users.model';
 import { Course } from './courses.model';
 import { SetUuidMiddleware } from 'src/middlewares/set-uuid.middleware';
+import { FilesModule } from 'src/files/files.module';
 
 @Module({
   providers: [CoursesService],
   controllers: [CoursesController],
   imports: [
     SequelizeModule.forFeature([User, Course]),
-  ]
+    FilesModule,
+  ],
+  exports: [CoursesService]
 })
 
 export class CoursesModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(SetUuidMiddleware)
       .forRoutes({
-        path: '',
+        path: 'courses',
+        method: RequestMethod.POST
+      })
+  }
+}
+
+export class UsersModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(SetUuidMiddleware)
+      .forRoutes({
+        path: 'users',
         method: RequestMethod.POST
       })
   }

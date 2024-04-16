@@ -8,9 +8,10 @@ interface CourseCreationAttributes {
     id: string;
     name: string;
     category: string;
-    description: object;
+    description: string;
     logo: string;
     rating: number;
+    userId: string;
 }
 
 @Table({
@@ -32,7 +33,7 @@ export class Course extends Model<Course, CourseCreationAttributes> {
     @Column({type: DataType.STRING})
     logo: string;
 
-    @Column({type: DataType.SMALLINT, unique: true, allowNull: false})
+    @Column({type: DataType.SMALLINT, allowNull: false})
     rating: number;
 
     @ForeignKey(() => User)
@@ -40,5 +41,5 @@ export class Course extends Model<Course, CourseCreationAttributes> {
     userId: string;
 
     @BelongsTo(() => User)
-    author: User
+    author: User 
 }
