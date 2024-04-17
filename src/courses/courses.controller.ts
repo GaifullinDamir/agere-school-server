@@ -2,8 +2,7 @@ import { Body, Controller, FileTypeValidator, ParseFilePipe, Post, UploadedFile,
 import { CreateCourseDto } from './dto/create-course.dto';
 import { CoursesService } from './courses.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import multer from 'multer';
-
+import { diskStorage } from 'multer';
 
 @Controller('courses')
 export class CoursesController {
