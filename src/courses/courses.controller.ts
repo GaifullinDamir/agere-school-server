@@ -1,7 +1,8 @@
-import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, FileTypeValidator, ParseFilePipe, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { CoursesService } from './courses.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import multer from 'multer';
 
 
 @Controller('courses')
@@ -13,7 +14,13 @@ export class CoursesController {
     @Post()
     @UseInterceptors(FileInterceptor('logo'))
     createCourse(@Body() dto: CreateCourseDto,
-                @UploadedFile() image) {
-        return this.courseService.create(dto, image);
+        @UploadedFile(
+            new ParseFilePipe({
+                validators: [
+                    new FileTypeValidator({fileType: /(jpg|jpeg|png)$/})
+                ]
+            })
+        ) file: Express.Multer.File) {
+        return this.courseService.create(dto, file);
     }
 }

@@ -26,13 +26,3 @@ export class CoursesModule implements NestModule {
       })
   }
 }
-
-export class UsersModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(SetUuidMiddleware)
-      .forRoutes({
-        path: 'users',
-        method: RequestMethod.POST
-      })
-  }
-}

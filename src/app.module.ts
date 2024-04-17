@@ -11,6 +11,8 @@ import { CoursesController } from './courses/courses.controller';
 import { CoursesModule } from './courses/courses.module';
 import { Course } from "./courses/courses.model";
 import { FilesModule } from './files/files.module';
+import { ServeStaticModule } from "@nestjs/serve-static";
+import * as path from "path";
 
 @Module({
     controllers: [CoursesController],
@@ -28,6 +30,9 @@ import { FilesModule } from './files/files.module';
           database: process.env.POSTGRES_DATABASE,
           models: [User, Role, UserRoles, Course],
           autoLoadModels: true
+        }),
+        ServeStaticModule.forRoot({
+          rootPath: path.resolve(__dirname, 'static'),
         }),
         UsersModule,
         RolesModule,
