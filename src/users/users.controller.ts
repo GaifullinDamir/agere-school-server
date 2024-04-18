@@ -19,7 +19,7 @@ export class UsersController {
     @UsePipes(ValidationPipe)
     @Post()
     create(@Body() userDto: CreateUserDto) {
-        return this.usersService.createUser(userDto);
+        return this.usersService.create(userDto);
     }
 
     @ApiOperation({summary: 'Получить всех пользователей'})
@@ -28,7 +28,7 @@ export class UsersController {
     @UseGuards(RolesGuard)
     @Get()
     getAll() {
-        return this.usersService.getAllUsers();
+        return this.usersService.getAll();
     }
 
     @ApiOperation({summary: 'Выдать роль.'})

@@ -11,7 +11,7 @@ export class UsersService {
     constructor(@InjectModel(User) private userRepository: typeof User,
                     private roleService: RolesService) {
     }
-    async createUser(dto: CreateUserDto) {
+    async create(dto: CreateUserDto) {
         const user = await this.userRepository.create(dto);
         const role = await this.roleService.getRoleByValue("user");
 
@@ -21,18 +21,23 @@ export class UsersService {
         return user;
     }
 
-    async getAllUsers() {
+    async getAll() {
         const users = await this.userRepository.findAll({
             include: {all: true}
         });
         return users;
     }
 
-    async getUserByEmail(email: string) {
+    async getByEmail(email: string) {
         const user = await this.userRepository.findOne({
             where:{email},
             include: {all: true}
         });
+        return user;
+    }
+
+    async getById(id: string) {
+        const user = await this.userRepository.findOne({where: {id}});
         return user;
     }
 

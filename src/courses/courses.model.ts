@@ -41,5 +41,5 @@ export class Course extends Model<Course, CourseCreationAttributes> {
     userId: string;
 
     @BelongsTo(() => User)
-    author: User 
+    author: User;
 }

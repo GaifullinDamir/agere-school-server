@@ -6,6 +6,7 @@ import { User } from 'src/users/users.model';
 import { Course } from './courses.model';
 import { SetUuidMiddleware } from 'src/middlewares/set-uuid.middleware';
 import { FilesModule } from 'src/files/files.module';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   providers: [CoursesService],
@@ -13,6 +14,7 @@ import { FilesModule } from 'src/files/files.module';
   imports: [
     SequelizeModule.forFeature([User, Course]),
     FilesModule,
+    UsersModule
   ],
   exports: [CoursesService]
 })

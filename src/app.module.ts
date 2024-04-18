@@ -7,7 +7,6 @@ import { RolesModule } from './roles/roles.module';
 import { Role } from "./roles/roles.model";
 import { UserRoles } from "./roles/user-roles.model";
 import { AuthModule } from './auth/auth.module';
-import { CoursesController } from './courses/courses.controller';
 import { CoursesModule } from './courses/courses.module';
 import { Course } from "./courses/courses.model";
 import { FilesModule } from './files/files.module';
@@ -15,7 +14,7 @@ import { ServeStaticModule } from "@nestjs/serve-static";
 import * as path from "path";
 
 @Module({
-    controllers: [CoursesController],
+    controllers: [],
     providers: [],
     imports: [
         ConfigModule.forRoot({

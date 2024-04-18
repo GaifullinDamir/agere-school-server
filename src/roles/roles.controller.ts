@@ -11,7 +11,6 @@ export class RolesController {
 
     @Post()
     create(@Body() dto: CreateRoleDto) {
-        
         return this.roleService.createRole(dto);
     }
 
