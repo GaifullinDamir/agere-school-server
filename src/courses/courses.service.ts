@@ -18,6 +18,11 @@ export class CoursesService {
         return course;
     }
 
+    async getAll(): Promise<Course[]> {
+        const courses = await this.courseRepository.findAll({include: [{all: true}]});
+        return courses;
+    }
+
     async getById(id: string): Promise<Course>{
         const course = await this.courseRepository.findOne({
             where: {id},

@@ -21,6 +21,11 @@ export class CoursesController {
         return this.courseService.create(dto, file);
     }
 
+    @Get()
+    getAllCourses() {
+        return this.courseService.getAll();
+    }
+    
     @Get('/:id')
     getCourseById(@Param('id') id: string) {
         return this.courseService.getById(id);
