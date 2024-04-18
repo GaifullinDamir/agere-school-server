@@ -14,7 +14,7 @@ export class UsersController {
 
     constructor(private usersService: UsersService) {}
 
-    @ApiOperation({summary: 'Создать пользователя'})
+    @ApiOperation({summary: 'Создать пользователя.'})
     @ApiResponse({status: 200, type: User})
     @UsePipes(ValidationPipe)
     @Post()
@@ -22,7 +22,7 @@ export class UsersController {
         return this.usersService.create(userDto);
     }
 
-    @ApiOperation({summary: 'Получить всех пользователей'})
+    @ApiOperation({summary: 'Получить всех пользователей.'})
     @ApiResponse({status: 200, type: [User]})
     @Roles("admin")
     @UseGuards(RolesGuard)
