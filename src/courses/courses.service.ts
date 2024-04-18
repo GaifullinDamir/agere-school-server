@@ -4,27 +4,21 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Course } from './courses.model';
 import { FilesService } from 'src/files/files.service';
 import { v1 as uuidv1 } from 'uuid';
-import { UsersService } from 'src/users/users.service';
-import { User } from 'src/users/users.model';
 
 @Injectable()
 export class CoursesService {
 
     constructor(@InjectModel(Course) private courseRepository: typeof Course,
-                private filesService: FilesService,
-                private usersSevice: UsersService) {
-
+        private filesService: FilesService) {
     }
-
-    async create(dto: CreateCourseDto, image: any) {
-        const fileName = await this.filesService.create(image);
+    async create(dto: CreateCourseDto, image: Express.Multer.File): Promise<Course>{
         const id = uuidv1();
-        const description = JSON.stringify(dto.description);
-        const course = await this.courseRepository.create({... dto, id, description, logo: fileName });
+        const {fileName, description} = await this.processData(dto, image);
+        const course = await this.courseRepository.create({... dto, id, description, logo: fileName});
         return course;
     }
 
-    async getById(id: string) {
+    async getById(id: string): Promise<Course>{
         const course = await this.courseRepository.findOne({
             where: {id},
             include: [{all: true}]
@@ -35,5 +29,29 @@ export class CoursesService {
         }
         return course;
         
+    }
+
+    async update(dto: CreateCourseDto, image?: Express.Multer.File): Promise<[affectedCount: number]>{ 
+        const {fileName, description} = await this.processData(dto, image);
+        
+        const course = await this.courseRepository
+            .update(
+                {
+                    ...dto, description, logo: fileName? fileName : dto.logo
+                },
+                {where: {id: dto.id}}
+            )
+        return course;
+    }
+
+    private async processData(dto: CreateCourseDto, image?: Express.Multer.File):
+        Promise<{fileName: string, description: string}>
+    {
+        const fileName = image ? await this.filesService.create(image) : null;
+        const description = JSON.stringify(dto.description);
+
+        return {
+            fileName, description
+        };
     }
 }
