@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod, forwardRef } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CoursesController } from './courses.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -7,6 +7,8 @@ import { Course } from './courses.model';
 import { SetUuidMiddleware } from 'src/middlewares/set-uuid.middleware';
 import { FilesModule } from 'src/files/files.module';
 import { UsersModule } from 'src/users/users.module';
+import { RolesModule } from 'src/roles/roles.module';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   providers: [CoursesService],
@@ -14,7 +16,9 @@ import { UsersModule } from 'src/users/users.module';
   imports: [
     SequelizeModule.forFeature([User, Course]),
     FilesModule,
-    UsersModule
+    UsersModule,
+    RolesModule,
+    forwardRef(() => AuthModule)
   ],
   exports: [CoursesService]
 })

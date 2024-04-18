@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-export class CreateCourseDto{
+export class UpdateCourseDto{
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
     readonly id: string;
     
@@ -20,6 +20,6 @@ export class CreateCourseDto{
     @ApiProperty({example: 'image.jpeg', description: 'Логотип курса. Отправлять файл.'})
     readonly logo: string;
 
-    @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'id создателя курса.'})
-    readonly userId: string;
+    @ApiProperty({example: '0', description: 'Средний рейтинг курса.'})
+    readonly rating: number;
 }

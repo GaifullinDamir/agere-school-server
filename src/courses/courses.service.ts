@@ -11,10 +11,11 @@ export class CoursesService {
     constructor(@InjectModel(Course) private courseRepository: typeof Course,
         private filesService: FilesService) {
     }
-    async create(dto: CreateCourseDto, image: Express.Multer.File): Promise<Course>{
+    async create(dto: CreateCourseDto, userId: string, image: Express.Multer.File): Promise<Course>{
         const id = uuidv1();
         const {fileName, description} = await this.processData(dto, image);
-        const course = await this.courseRepository.create({... dto, id, description, logo: fileName});
+        const course = await this.courseRepository.create({... dto, id, userId, rating: 0, description, logo: fileName});
+
         return course;
     }
 
@@ -36,17 +37,21 @@ export class CoursesService {
         
     }
 
-    async update(dto: CreateCourseDto, image?: Express.Multer.File): Promise<[affectedCount: number]>{ 
+    async update(dto: CreateCourseDto, userId: string, image?: Express.Multer.File): Promise<[affectedCount: number]>{ 
         const {fileName, description} = await this.processData(dto, image);
-        
-        const course = await this.courseRepository
+        const course = await this.courseRepository.findOne({where: {id: dto.id}});
+        if (course.userId === userId) {
+            const course = await this.courseRepository
             .update(
                 {
-                    ...dto, description, logo: fileName? fileName : dto.logo
+                    ...dto, description, userId, logo: fileName? fileName : dto.logo
                 },
                 {where: {id: dto.id}}
             )
-        return course;
+            return course;
+        }
+        throw new HttpException('Данный курс не принадлежит этому пользователю.', HttpStatus.BAD_REQUEST);
+        
     }
 
     async delete(id: string): Promise<number>{
