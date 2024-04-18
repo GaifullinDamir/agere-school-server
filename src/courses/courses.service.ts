@@ -49,6 +49,12 @@ export class CoursesService {
         return course;
     }
 
+    async delete(id: string): Promise<number>{
+        const result = await this.courseRepository.destroy({where: {id}})
+
+        return result;
+    }
+
     private async processData(dto: CreateCourseDto, image?: Express.Multer.File):
         Promise<{fileName: string, description: string}>
     {

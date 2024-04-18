@@ -1,4 +1,4 @@
-import { Body, Controller, FileTypeValidator, Get, Param, ParseFilePipe, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, FileTypeValidator, Get, Param, ParseFilePipe, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { CoursesService } from './courses.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -25,7 +25,7 @@ export class CoursesController {
     getAllCourses() {
         return this.courseService.getAll();
     }
-    
+
     @Get('/:id')
     getCourseById(@Param('id') id: string) {
         return this.courseService.getById(id);
@@ -43,5 +43,10 @@ export class CoursesController {
             })
         ) file?: Express.Multer.File) {
         return this.courseService.update(dto, file);
+    }
+
+    @Delete('/:id')
+    deleteCourse(@Param('id') id: string) {
+        return this.courseService.delete(id);
     }
 }
