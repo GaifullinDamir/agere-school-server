@@ -4,7 +4,6 @@ import { CoursesController } from './courses.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from 'src/users/users.model';
 import { Course } from './courses.model';
-import { SetUuidMiddleware } from 'src/middlewares/set-uuid.middleware';
 import { FilesModule } from 'src/files/files.module';
 import { UsersModule } from 'src/users/users.module';
 import { RolesModule } from 'src/roles/roles.module';

@@ -5,7 +5,6 @@ import { Role } from './roles.model';
 import { RolesService } from './roles.service';
 import { User } from 'src/users/users.model';
 import { UserRoles } from './user-roles.model';
-import { SetUuidMiddleware } from 'src/middlewares/set-uuid.middleware';
 
 @Module({
   providers: [RolesService],

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -19,22 +19,31 @@ export class UsersController {
     @ApiResponse({status: 200, type: User})
     @UsePipes(CustomValidationPipe)
     @Post()
-    create(@Body() userDto: CreateUserDto) {
+    createUser(@Body() userDto: CreateUserDto) {
         return this.usersService.create(userDto);
     }
 
     @ApiOperation({summary: 'Получить всех пользователей.'})
     @ApiResponse({status: 200, type: [User]})
-    @Roles("admin")
+    @Roles('admin')
     @UseGuards(RolesGuard)
     @Get()
-    getAll() {
+    getAllUsers() {
         return this.usersService.getAll();
+    }
+
+    @ApiOperation({summary: 'Получить пользователя по id.'})
+    @ApiResponse({status: 200, type: User})
+    @Roles('admin')
+    @UseGuards(RolesGuard)
+    @Get('/:id')
+    getUserById(@Param('id') id: string) {
+        return this.usersService.getById(id);
     }
 
     @ApiOperation({summary: 'Выдать роль.'})
     @ApiResponse({status: 200})
-    @Roles("admin")
+    @Roles('admin')
     @UseGuards(RolesGuard)
     @Post('/role')
     addRole(@Body() dto: AddRoleDto) {
