@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, FileTypeValidator, Get, Param, ParseFilePipe, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, FileTypeValidator, Get, Param, ParseFilePipe, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { CoursesService } from './courses.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -7,6 +7,8 @@ import { Course } from './courses.model';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { GetUser } from 'src/auth/get-user.decorator';
+import { CustomValidationPipe } from 'src/pipes/validation.pipe';
+import { UpdateCourseDto } from './dto/update-course.dto';
 
 @ApiTags('Курсы')
 @Controller('courses')
@@ -17,6 +19,7 @@ export class CoursesController {
     @ApiResponse({status: 200, type: Course})
     @Roles("user")
     @UseGuards(RolesGuard)
+    @UsePipes(ValidationPipe)
     @Post()
     @UseInterceptors(FileInterceptor('logo'))
     createCourse(@GetUser() user: any, @Body() dto: CreateCourseDto,
@@ -26,8 +29,8 @@ export class CoursesController {
                     new FileTypeValidator({fileType: /(jpg|jpeg|png)$/})
                 ]
             })
-        ) file: Express.Multer.File) {
-        return this.courseService.create(dto,user.id, file);
+        ) logo: Express.Multer.File) {
+        return this.courseService.create(dto,user.id, logo);
     }
 
     @ApiOperation({summary: 'Получить курсы.'})
@@ -48,9 +51,10 @@ export class CoursesController {
     @ApiResponse({status: 200, type: [Number]})
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
-    @Put()
+    @UsePipes(CustomValidationPipe)
+    @Put('/:id')
     @UseInterceptors(FileInterceptor('logo'))
-    updateCourse( @GetUser() user: any, @Body() dto: CreateCourseDto, 
+    updateCourse(@Param('id') id: string, @GetUser() user: any, @Body() dto: UpdateCourseDto, 
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
@@ -59,13 +63,15 @@ export class CoursesController {
                 fileIsRequired: false
             })
         ) file?: Express.Multer.File) {
-        return this.courseService.update(dto, user.id, file);
+        return this.courseService.update(id, dto, user.id, file);
     }
 
     @ApiOperation({summary: 'Удалить курс по id.'})
     @ApiResponse({status: 200, type: Number})
+    @Roles('admin', 'user')
+    @UseGuards(RolesGuard)
     @Delete('/:id')
-    deleteCourse(@Param('id') id: string) {
-        return this.courseService.delete(id);
+    deleteCourse(@Param('id') id: string,  @GetUser() user: any) {
+        return this.courseService.delete(id, user);
     }
 }

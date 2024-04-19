@@ -1,15 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsJSON, IsString } from "class-validator";
 
 export class CreateCourseDto{
-    @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
-    readonly id: string;
-    
     @ApiProperty({example: 'Course name', description: 'Название курса.'})
+    @IsString({message: 'Должно быть строкой.'})
     readonly name: string;
 
+    @IsString({message: 'Должно быть строкой.'})
     @ApiProperty({example: 'Категория', description: 'Категория курса.'})
     readonly category: string; 
 
+    @IsJSON({message: 'Должен быть JSON-файл'})
     @ApiProperty(
         {
             example: '{"short_descr": "Короткое описание.", "learn_results_descr": "Результаты обучения.", "about_course_descr": "О чем курс.", "initial_requirements_descr": "Начальные требования." }',
@@ -19,7 +20,4 @@ export class CreateCourseDto{
 
     @ApiProperty({example: 'image.jpeg', description: 'Логотип курса. Отправлять файл.'})
     readonly logo: string;
-
-    @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'id создателя курса.'})
-    readonly userId: string;
 }

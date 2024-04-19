@@ -4,11 +4,15 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Course } from './courses.model';
 import { FilesService } from 'src/files/files.service';
 import { v1 as uuidv1 } from 'uuid';
+import { UpdateCourseDto } from './dto/update-course.dto';
+import { ViewCourseDto } from './dto/view-course-dto';
+import { User } from 'src/users/users.model';
 
 @Injectable()
 export class CoursesService {
 
     constructor(@InjectModel(Course) private courseRepository: typeof Course,
+        @InjectModel(User) private userRepository: typeof User,
         private filesService: FilesService) {
     }
     async create(dto: CreateCourseDto, userId: string, image: Express.Multer.File): Promise<Course>{
@@ -19,12 +23,18 @@ export class CoursesService {
         return course;
     }
 
-    async getAll(): Promise<Course[]> {
+    async getAll(): Promise<ViewCourseDto[]> {
         const courses = await this.courseRepository.findAll({include: [{all: true}]});
+        const coursesViews = [];
+        if (courses.length) {
+            courses.forEach(course => {
+                coursesViews.push(this.courseToViewCourseDto(course));
+            })
+        }
         return courses;
     }
 
-    async getById(id: string): Promise<Course>{
+    async getById(id: string): Promise<ViewCourseDto>{
         const course = await this.courseRepository.findOne({
             where: {id},
             include: [{all: true}]
@@ -33,34 +43,41 @@ export class CoursesService {
         if (!course) {
             throw new HttpException('Курс не найден.', HttpStatus.NOT_FOUND);
         }
-        return course;
-        
+        const courseView: ViewCourseDto = this.courseToViewCourseDto(course);
+
+        return courseView;
     }
 
-    async update(dto: CreateCourseDto, userId: string, image?: Express.Multer.File): Promise<[affectedCount: number]>{ 
+    async update(id: string, dto: UpdateCourseDto, userId: string, image?: Express.Multer.File): Promise<[affectedCount: number]>{ 
         const {fileName, description} = await this.processData(dto, image);
         const course = await this.courseRepository.findOne({where: {id: dto.id}});
         if (course.userId === userId) {
             const course = await this.courseRepository
             .update(
                 {
-                    ...dto, description, userId, logo: fileName? fileName : dto.logo
+                    ...dto, id, description, userId, logo: fileName? fileName : dto.logo
                 },
                 {where: {id: dto.id}}
             )
             return course;
         }
         throw new HttpException('Данный курс не принадлежит этому пользователю.', HttpStatus.BAD_REQUEST);
-        
     }
 
-    async delete(id: string): Promise<number>{
-        const result = await this.courseRepository.destroy({where: {id}})
-
-        return result;
+    async delete(id: string, user: any): Promise<number>{
+        const role = user.roles.find(role => role.value === 'admin');
+        if (role) {
+            return await this.courseRepository.destroy({where: {id}})
+        } else {
+            const course = await this.courseRepository.findOne({where: {userId: user.id}});
+            if (course && course.id === id) {
+                return await this.courseRepository.destroy({where: {id}})
+            }
+            throw new HttpException('Этот курс не принадлежит данному пользователю.', HttpStatus.FORBIDDEN)
+        }
     }
 
-    private async processData(dto: CreateCourseDto, image?: Express.Multer.File):
+    private async processData(dto: CreateCourseDto | UpdateCourseDto, image?: Express.Multer.File):
         Promise<{fileName: string, description: string}>
     {
         const fileName = image ? await this.filesService.create(image) : null;
@@ -69,5 +86,19 @@ export class CoursesService {
         return {
             fileName, description
         };
+    }
+
+    private courseToViewCourseDto(course: Course) {
+        const courseView = new ViewCourseDto();
+        courseView.id = course.id;
+        courseView.name = course.name;
+        courseView.category = course.category;
+        courseView.description = course.description;
+        courseView.logo = course.logo;
+        courseView.rating = course.rating;
+        courseView.userId = course.userId;
+        courseView.author = course.author;
+
+        return courseView;
     }
 }

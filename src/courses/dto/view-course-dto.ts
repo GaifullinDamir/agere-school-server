@@ -1,31 +1,45 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsJSON, IsNumber, IsNumberString, IsString, isNumber } from "class-validator";
+import { User } from "src/users/users.model";
 
-export class UpdateCourseDto{
+export class ViewCourseDto{
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
-    @IsString({message: 'Должно быть строкой.'})
-    readonly id: string;
-    
-    @IsString({message: 'Должно быть строкой.'})
+    id: string;
+
     @ApiProperty({example: 'Course name', description: 'Название курса.'})
-    readonly name: string;
+    name: string;
 
-    @IsString({message: 'Должно быть строкой.'})
     @ApiProperty({example: 'Категория', description: 'Категория курса.'})
-    readonly category: string; 
+    category: string;
 
-    @IsJSON({message: 'Должен быть JSON-файл.'})
     @ApiProperty(
         {
             example: '{"short_descr": "Короткое описание.", "learn_results_descr": "Результаты обучения.", "about_course_descr": "О чем курс.", "initial_requirements_descr": "Начальные требования." }',
             description: 'Описание курса (JSON-файл. Структура свободная).'
         })
-    readonly description: string;
+    description: string;
 
     @ApiProperty({example: 'image.jpeg', description: 'Логотип курса. Отправлять файл.'})
-    readonly logo: string;
+    logo: string;
 
-    @IsNumberString()
     @ApiProperty({example: '0', description: 'Средний рейтинг курса.'})
-    readonly rating: number;
+    rating: number;
+
+    @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'id создателя курса.'})
+    userId: string;
+
+    @ApiProperty({
+        example: {
+            "id": "dc255b20-f911-11ee-a962-23956c5947c1",
+            "name": "Андрей",
+            "surname": "Горохов",
+            "patronimic": "Сергеевич",
+            "logo": null,
+            "email": "andrew@mail.ru",
+            "password": "12345",
+            "createdAt": "2024-04-12T21:15:59.829Z",
+            "updatedAt": "2024-04-12T21:15:59.829Z"
+        },
+        description: 'Создатель курса.'
+    })
+    author: User;
 }
