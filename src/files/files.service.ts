@@ -1,14 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as path from 'path';
 import * as fsPromises from 'fs/promises';
-import {v4 as uuidv4} from 'uuid';
+import {v1 as uuidv1} from 'uuid';
 
 @Injectable()
 export class FilesService {
     async create(file: Express.Multer.File): Promise<string> {
         try {
             const fileExt = path.parse(file.originalname).ext;
-            const fileName = `${uuidv4()}${fileExt}`;
+            const fileName = `${uuidv1()}${fileExt}`;
             const dirPath = path.resolve(__dirname, '..', 'static');
 
             fsPromises.access(dirPath)

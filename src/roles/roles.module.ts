@@ -15,12 +15,4 @@ import { SetUuidMiddleware } from 'src/middlewares/set-uuid.middleware';
   ],
   exports: [RolesService]
 })
-export class RolesModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(SetUuidMiddleware)
-      .forRoutes({
-        path: 'roles',
-        method: RequestMethod.POST
-      })
-  }
-}
+export class RolesModule {}

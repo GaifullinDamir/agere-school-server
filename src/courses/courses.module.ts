@@ -23,12 +23,4 @@ import { AuthModule } from 'src/auth/auth.module';
   exports: [CoursesService]
 })
 
-export class CoursesModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(SetUuidMiddleware)
-      .forRoutes({
-        path: 'courses',
-        method: RequestMethod.POST
-      })
-  }
-}
+export class CoursesModule {}

@@ -50,14 +50,14 @@ export class CoursesService {
 
     async update(id: string, dto: UpdateCourseDto, userId: string, image?: Express.Multer.File): Promise<[affectedCount: number]>{ 
         const {fileName, description} = await this.processData(dto, image);
-        const course = await this.courseRepository.findOne({where: {id: dto.id}});
+        const course = await this.courseRepository.findOne({where: {id}});
         if (course.userId === userId) {
             const course = await this.courseRepository
             .update(
                 {
                     ...dto, id, description, userId, logo: fileName? fileName : dto.logo
                 },
-                {where: {id: dto.id}}
+                {where: {id}}
             )
             return course;
         }

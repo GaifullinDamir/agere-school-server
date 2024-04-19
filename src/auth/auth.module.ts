@@ -22,12 +22,4 @@ import { SetUuidMiddleware } from 'src/middlewares/set-uuid.middleware';
     JwtModule
   ]
 })
-export class AuthModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(SetUuidMiddleware)
-      .forRoutes({
-        path: 'auth/registration',
-        method: RequestMethod.POST
-      })
-  }
-}
+export class AuthModule {}

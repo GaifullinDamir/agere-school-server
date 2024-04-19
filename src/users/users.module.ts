@@ -22,12 +22,4 @@ import { Course } from 'src/courses/courses.model';
     UsersService, 
   ]
 })
-export class UsersModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(SetUuidMiddleware)
-      .forRoutes({
-        path: 'users',
-        method: RequestMethod.POST
-      })
-  }
-}
+export class UsersModule {}

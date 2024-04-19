@@ -51,7 +51,7 @@ export class CoursesController {
     @ApiResponse({status: 200, type: [Number]})
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
-    @UsePipes(CustomValidationPipe)
+    @UsePipes(ValidationPipe)
     @Put('/:id')
     @UseInterceptors(FileInterceptor('logo'))
     updateCourse(@Param('id') id: string, @GetUser() user: any, @Body() dto: UpdateCourseDto, 
