@@ -15,7 +15,7 @@ export class UsersService {
     async create(dto: CreateUserDto) {
         const id = uuidv1();
         const user = await this.userRepository.create({...dto, id});
-        const role = await this.roleService.getRoleByValue("user");
+        const role = await this.roleService.getByValue("user");
         await user.$set('roles', [role.id]);
         user.roles = [role];
         return user;
@@ -43,7 +43,7 @@ export class UsersService {
 
     async addRole(dto: AddRoleDto) {
         const user = await this.userRepository.findByPk(dto.userId);
-        const role = await this.roleService.getRoleByValue(dto.value);
+        const role = await this.roleService.getByValue(dto.value);
         if (role && user) {
             await user.$add('role', role.id);
             return dto;
