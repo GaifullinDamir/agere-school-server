@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from './dto/create-user.dto';
 import { RolesService } from 'src/roles/roles.service';
 import { AddRoleDto } from './dto/add-role.dto';
+import { v1 as uuidv1} from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -12,10 +13,9 @@ export class UsersService {
                     private roleService: RolesService) {
     }
     async create(dto: CreateUserDto) {
-        const user = await this.userRepository.create(dto);
+        const id = uuidv1();
+        const user = await this.userRepository.create({...dto, id});
         const role = await this.roleService.getRoleByValue("user");
-
-        // $set - перезаписывает какое-то поле в базе данных и сразу присвоить ему значение.
         await user.$set('roles', [role.id]);
         user.roles = [role];
         return user;
