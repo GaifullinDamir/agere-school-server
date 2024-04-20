@@ -2,11 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsJSON, IsNumberString, IsOptional, IsString} from "class-validator";
 
 export class UpdateCourseDto{
-    // @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
-    // @IsString({message: 'id - Должно быть строкой.'})
-    // @IsOptional()
-    // readonly id: string;
-    
     @ApiProperty({example: 'Course name', description: 'Название курса.'})
     @IsString({message: 'name - Должно быть строкой.'})
     @IsOptional()

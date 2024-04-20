@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
@@ -14,6 +14,7 @@ export class RolesController {
 
     @ApiOperation({summary: 'Создать роль.'})
     @ApiResponse({status: 200, type: ViewRoleDto})
+    @UsePipes(ValidationPipe)
     @Post()
     createRole(@Body() dto: CreateRoleDto) {
         return this.roleService.create(dto);
@@ -34,12 +35,22 @@ export class RolesController {
     }
 
     @ApiOperation({summary: 'Изменить роль.'})
+    @ApiResponse({status: 200, type: [Number]})
+    @Roles('admin')
+    @UseGuards(RolesGuard)
+    @UsePipes(ValidationPipe)
+    @Put('/:id')
+    updateRole(@Param('id') id: string, @Body() dto: UpdateRoleDto) {
+        return this.roleService.update(id, dto);
+    }
+
+    @ApiOperation({summary: 'Удалить роль.'})
     @ApiResponse({status: 200, type: Number})
     @Roles('admin')
     @UseGuards(RolesGuard)
-    @Put('/:id')
-    updateCourse(@Param('id') id: string, @Body() dto: UpdateRoleDto) {
-        return this.roleService.update(id, dto);
+    @Delete('/:id')
+    deleteRole(@Param('id') id: string) {
+        return this.roleService.delete(id);
     }
 
 }

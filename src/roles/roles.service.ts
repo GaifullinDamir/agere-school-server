@@ -30,4 +30,9 @@ export class RolesService {
         const result = await this.roleRepository.update({...dto}, {where: {id}});
         return result;
     }
+
+    async delete(id: string): Promise<Number> {
+        const result = await this.roleRepository.destroy({where: {id}});
+        return result;
+    }
 }
