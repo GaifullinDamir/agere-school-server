@@ -7,7 +7,6 @@ import { Course } from './courses.model';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { GetUser } from 'src/auth/get-user.decorator';
-import { CustomValidationPipe } from 'src/pipes/validation.pipe';
 import { UpdateCourseDto } from './dto/update-course.dto';
 
 @ApiTags('Курсы')

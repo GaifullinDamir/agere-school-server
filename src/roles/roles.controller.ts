@@ -1,20 +1,45 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
-import { v1 as uuidv1 } from 'uuid'
+import { UpdateRoleDto } from './dto/update-role.dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/auth/roles-auth.decorator';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { ViewRoleDto } from './dto/view-role.dto';
 
+@ApiTags('Роли')
 @Controller('roles')
 export class RolesController {
     constructor(private roleService: RolesService) {}
 
+    @ApiOperation({summary: 'Создать роль.'})
+    @ApiResponse({status: 200, type: ViewRoleDto})
     @Post()
-    create(@Body() dto: CreateRoleDto) {
+    createRole(@Body() dto: CreateRoleDto) {
         return this.roleService.create(dto);
     }
 
+    @ApiOperation({summary: 'Получить все роли.'})
+    @ApiResponse({status: 200, type: [ViewRoleDto]})
+    @Get()
+    getAllRoles() {
+        return this.roleService.getAll();
+    }
+
+    @ApiOperation({summary: 'Получить роль по значению.'})
+    @ApiResponse({status: 200, type: ViewRoleDto})
     @Get('/:value')
-    getByValue(@Param('value') value: string) {
+    getRoleByValue(@Param('value') value: string) {
         return this.roleService.getByValue(value);
+    }
+
+    @ApiOperation({summary: 'Изменить роль.'})
+    @ApiResponse({status: 200, type: Number})
+    @Roles('admin')
+    @UseGuards(RolesGuard)
+    @Put('/:id')
+    updateCourse(@Param('id') id: string, @Body() dto: UpdateRoleDto) {
+        return this.roleService.update(id, dto);
     }
 
 }

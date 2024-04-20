@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Role } from './roles.model';
 import { v1 as uuidv1 } from 'uuid';
 import { ViewRoleDto } from './dto/view-role.dto';
+import { UpdateRoleDto } from './dto/update-role.dto';
 
 @Injectable()
 export class RolesService {
@@ -15,8 +16,18 @@ export class RolesService {
         return new ViewRoleDto(role);
     }
 
+    async getAll(): Promise<ViewRoleDto[]> {
+        const roles = await this.roleRepository.findAll({include: {all: true}});
+        return roles.map(role => new ViewRoleDto(role));
+    }
+
     async getByValue(value: string): Promise<ViewRoleDto>{
         const role = await this.roleRepository.findOne({where: {value}});
         return new ViewRoleDto(role);
+    }
+
+    async update(id: string, dto: UpdateRoleDto): Promise<Number[]>{
+        const result = await this.roleRepository.update({...dto}, {where: {id}});
+        return result;
     }
 }
