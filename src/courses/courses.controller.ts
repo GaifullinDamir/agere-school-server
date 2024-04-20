@@ -54,7 +54,7 @@ export class CoursesController {
     @UsePipes(ValidationPipe)
     @Put('/:id')
     @UseInterceptors(FileInterceptor('logo'))
-    updateCourse(@Param('id') id: string, @GetUser() user: any, @Body() dto: UpdateCourseDto, 
+    updateCourse(@Param('id') id: string, @Body() dto: UpdateCourseDto, @GetUser() user: any,
         @UploadedFile(
             new ParseFilePipe({
                 validators: [

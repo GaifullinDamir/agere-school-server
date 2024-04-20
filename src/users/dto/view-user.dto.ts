@@ -2,7 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Course } from "src/courses/courses.model";
 import { Role } from "src/roles/roles.model";
 import { User } from "../users.model";
-import { Injectable } from "@nestjs/common";
 
 export class ViewUserDto {
     constructor(private user: User) {

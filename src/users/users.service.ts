@@ -23,18 +23,14 @@ export class UsersService {
         const role = await this.roleService.getByValue("user");
         await user.$set('roles', [role.id]);
         user.roles = [role];
-        const viewUser = new ViewUserDto(user);
-        return viewUser;
+        return new ViewUserDto(user);
     }
 
     async getAll(): Promise<ViewUserDto[]>{
         const users = await this.userRepository.findAll({
             include: {all: true}
         });
-        const usersViews = users.map(user => {
-            return new ViewUserDto(user);
-        })
-        return usersViews;
+        return users.map(user => new ViewUserDto(user))
     }
 
     async getByEmail(email: string) : Promise<ViewUserDto>{
@@ -42,22 +38,19 @@ export class UsersService {
             where:{email},
             include: {all: true}
         });
-        const viewUser = new ViewUserDto(user);
-        return viewUser;
+        return new ViewUserDto(user);
     }
 
     async getById(id: string): Promise<ViewUserDto> {
         const user = await this.userRepository.findOne({where: {id}});
-        const viewUser = new ViewUserDto(user);
-        return viewUser;
+        return new ViewUserDto(user);
     }
 
     async update(id: string, dto: UpdateUserDto, actor: any, file?: Express.Multer.File): Promise<Number[]> {
-        console.log(actor)
         const role = actor.roles.find(role => role.value === 'admin');
         if (role || id === actor.id) {
             const fileName = file ? await this.filesService.create(file) : null;
-            const result = this.userRepository.update(
+            const result = await this.userRepository.update(
                 {
                     ...dto, id, logo: fileName ? fileName : dto.logo, password: dto.password ? await bcrypt.hash(dto.password, 5) : dto.password
                 },
@@ -68,8 +61,12 @@ export class UsersService {
         throw new HttpException('Данный пользователь не доступен.', HttpStatus.FORBIDDEN);
     }
 
-    async delete(id: string, actor: any) {
-
+    async delete(id: string, actor: any) :Promise<Number> {
+        const role = actor.roles.find(role => role.value === 'admin');
+        if (role || id === actor.id) {
+            return await this.userRepository.destroy({where: {id}});
+        }
+        throw new HttpException('Нет доступа к данному пользователю.', HttpStatus.FORBIDDEN);
     }
 
     async addRole(dto: AddRoleDto) {
@@ -79,6 +76,6 @@ export class UsersService {
             await user.$add('role', role.id);
             return dto;
         }
-        throw new HttpException('Пользователь или роль не найдены', HttpStatus.NOT_FOUND);
+        throw new HttpException('Пользователь или роль не найдены.', HttpStatus.NOT_FOUND);
     }
 }
