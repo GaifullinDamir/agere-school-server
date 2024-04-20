@@ -5,8 +5,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { RolesService } from 'src/roles/roles.service';
 import { AddRoleDto } from './dto/add-role.dto';
 import { v1 as uuidv1} from 'uuid';
-import { UpdateCourseDto } from 'src/courses/dto/update-course.dto';
 import { FilesService } from 'src/files/files.service';
+import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UsersService {
@@ -44,10 +45,15 @@ export class UsersService {
         return user;
     }
 
-    async update(id: string, actor: any, dto: UpdateCourseDto, file?: Express.Multer.File) {
+    async update(id: string, dto: UpdateUserDto, actor: any, file?: Express.Multer.File) {
+        console.log(actor)
         const role = actor.roles.find(role => role.value === 'admin');
         if (role || id === actor.id) {
             const fileName = file ? await this.filesService.create(file) : null;
+            if(dto.password) {
+                const hashPassword = await bcrypt.hash(dto.password, 5);
+                dto.password = hashPassword;
+            }
             const user = this.userRepository.update(
                 {
                     ...dto, id, logo: fileName ? fileName : dto.logo

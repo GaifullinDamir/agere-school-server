@@ -61,7 +61,7 @@ export class CoursesService {
             )
             return course;
         }
-        throw new HttpException('Данный курс не принадлежит этому пользователю.', HttpStatus.BAD_REQUEST);
+        throw new HttpException('Данный курс не доступен.', HttpStatus.BAD_REQUEST);
     }
 
     async delete(id: string, user: any): Promise<number>{

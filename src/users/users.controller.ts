@@ -60,7 +60,7 @@ export class UsersController {
                 fileIsRequired: false
             })
         ) file?: Express.Multer.File) {
-            return this.usersService.update(id, dto, user.id, file);
+            return this.usersService.update(id, dto, user, file);
     }
 
     @ApiOperation({summary: 'Выдать роль.'})
