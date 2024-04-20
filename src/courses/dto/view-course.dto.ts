@@ -1,7 +1,18 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { User } from "src/users/users.model";
+import { ViewUserDto } from "src/users/dto/view-user.dto";
+import { Course } from "../courses.model";
 
 export class ViewCourseDto{
+    constructor(course: Course) {
+        this.id = course.id;
+        this.name = course.name;
+        this.category = course.category;
+        this.description = course.description;
+        this.logo = course.logo;
+        this.rating = course.rating;
+        this.userId = course.userId;
+        this.author = new ViewUserDto(course.author);
+    }
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
     id: string;
 
@@ -41,5 +52,5 @@ export class ViewCourseDto{
         },
         description: 'Создатель курса.'
     })
-    author: User;
+    author: ViewUserDto;
 }

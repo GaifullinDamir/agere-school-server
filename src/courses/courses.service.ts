@@ -5,7 +5,7 @@ import { Course } from './courses.model';
 import { FilesService } from 'src/files/files.service';
 import { v1 as uuidv1 } from 'uuid';
 import { UpdateCourseDto } from './dto/update-course.dto';
-import { ViewCourseDto } from './dto/view-course-dto';
+import { ViewCourseDto } from './dto/view-course.dto';
 import { User } from 'src/users/users.model';
 
 @Injectable()
@@ -28,10 +28,10 @@ export class CoursesService {
         const coursesViews = [];
         if (courses.length) {
             courses.forEach(course => {
-                coursesViews.push(this.courseToViewCourseDto(course));
+                coursesViews.push(new ViewCourseDto(course));
             })
         }
-        return courses;
+        return coursesViews;
     }
 
     async getById(id: string): Promise<ViewCourseDto>{
@@ -43,9 +43,7 @@ export class CoursesService {
         if (!course) {
             throw new HttpException('Курс не найден.', HttpStatus.NOT_FOUND);
         }
-        const courseView: ViewCourseDto = this.courseToViewCourseDto(course);
-
-        return courseView;
+        return new ViewCourseDto(course);
     }
 
     async update(id: string, dto: UpdateCourseDto, userId: string, image?: Express.Multer.File): Promise<[affectedCount: number]>{ 
@@ -86,19 +84,5 @@ export class CoursesService {
         return {
             fileName, description
         };
-    }
-
-    private courseToViewCourseDto(course: Course) {
-        const courseView = new ViewCourseDto();
-        courseView.id = course.id;
-        courseView.name = course.name;
-        courseView.category = course.category;
-        courseView.description = course.description;
-        courseView.logo = course.logo;
-        courseView.rating = course.rating;
-        courseView.userId = course.userId;
-        courseView.author = course.author;
-
-        return courseView;
     }
 }

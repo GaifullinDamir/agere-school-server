@@ -5,9 +5,7 @@ import { v1 as uuidv1 } from 'uuid'
 
 @Controller('roles')
 export class RolesController {
-    constructor(private roleService: RolesService) {
-
-    }
+    constructor(private roleService: RolesService) {}
 
     @Post()
     create(@Body() dto: CreateRoleDto) {

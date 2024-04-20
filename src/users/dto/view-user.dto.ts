@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Course } from "src/courses/courses.model";
-import { Role } from "src/roles/roles.model";
 import { User } from "../users.model";
+import { ViewRoleDto } from "src/roles/dto/view-role.dto";
+import { ViewCourseDto } from "src/courses/dto/view-course.dto";
 
 export class ViewUserDto {
     constructor(private user: User) {
@@ -12,8 +12,8 @@ export class ViewUserDto {
         this.logo = user.logo;
         this.email = user.email;
         this.password = user.password;
-        this.roles = user.roles;
-        this.courses = user.courses;
+        this.roles = user.roles.map(role => new ViewRoleDto(role));
+        this.courses = user.courses.map(course => new ViewCourseDto(course));
     }
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
     readonly id: string;
@@ -50,7 +50,7 @@ export class ViewUserDto {
             }
         }
     ], description: 'Роли пользователя.'})
-    readonly roles: Role[];
+    readonly roles: ViewRoleDto[];
 
     @ApiProperty({example: [
         {
@@ -65,5 +65,5 @@ export class ViewUserDto {
             "updatedAt": "2024-04-18T20:04:47.801Z"
         }
     ], description: 'Курсы пользователя.'})
-    readonly courses: Course[];
+    readonly courses: ViewCourseDto[];
 }

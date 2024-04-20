@@ -22,8 +22,9 @@ export class UsersService {
         const user = await this.userRepository.create({...dto, id});
         const role = await this.roleService.getByValue("user");
         await user.$set('roles', [role.id]);
-        user.roles = [role];
-        return new ViewUserDto(user);
+        // user.roles = [role];
+        const updatedUser = await this.userRepository.findOne({where: {id}, include: {all: true}}); 
+        return new ViewUserDto(updatedUser);
     }
 
     async getAll(): Promise<ViewUserDto[]>{
