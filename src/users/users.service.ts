@@ -5,12 +5,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { RolesService } from 'src/roles/roles.service';
 import { AddRoleDto } from './dto/add-role.dto';
 import { v1 as uuidv1} from 'uuid';
+import { UpdateCourseDto } from 'src/courses/dto/update-course.dto';
+import { FilesService } from 'src/files/files.service';
 
 @Injectable()
 export class UsersService {
 
     constructor(@InjectModel(User) private userRepository: typeof User,
-                    private roleService: RolesService) {
+        private roleService: RolesService,
+        private filesService: FilesService) {
     }
     async create(dto: CreateUserDto) {
         const id = uuidv1();
@@ -39,6 +42,21 @@ export class UsersService {
     async getById(id: string) {
         const user = await this.userRepository.findOne({where: {id}});
         return user;
+    }
+
+    async update(id: string, actor: any, dto: UpdateCourseDto, file?: Express.Multer.File) {
+        const role = actor.roles.find(role => role.value === 'admin');
+        if (role || id === actor.id) {
+            const fileName = file ? await this.filesService.create(file) : null;
+            const user = this.userRepository.update(
+                {
+                    ...dto, id, logo: fileName ? fileName : dto.logo
+                },
+                {where: {id}}
+            )
+            return user;
+        }
+        throw new HttpException('Данный пользователь не доступен.', HttpStatus.FORBIDDEN);
     }
 
     async addRole(dto: AddRoleDto) {

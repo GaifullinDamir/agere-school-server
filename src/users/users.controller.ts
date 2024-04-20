@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, FileTypeValidator, Get, Param, ParseFilePipe, Post, Put, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -8,6 +8,9 @@ import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { AddRoleDto } from './dto/add-role.dto';
 import { CustomValidationPipe } from 'src/pipes/validation.pipe';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @ApiTags('Пользователи')
 @Controller('users')
@@ -39,6 +42,25 @@ export class UsersController {
     @Get('/:id')
     getUserById(@Param('id') id: string) {
         return this.usersService.getById(id);
+    }
+
+    @ApiOperation({summary: 'Изменить пользователя по id.'})
+    @ApiResponse({status: 200, type: [Number]})
+    @Roles('admin', 'user')
+    @UseGuards(RolesGuard)
+    @UsePipes(ValidationPipe)
+    @Put('/:id')
+    @UseInterceptors(FileInterceptor('logo'))
+    updateUser(@Param('id') id: string, @GetUser() user: any, @Body() dto: UpdateUserDto,
+        @UploadedFile(
+            new ParseFilePipe({
+                validators: [
+                    new FileTypeValidator({fileType: /(jpg|jpeg|png)$/})
+                ],
+                fileIsRequired: false
+            })
+        ) file?: Express.Multer.File) {
+            return this.usersService.update(id, dto, user.id, file);
     }
 
     @ApiOperation({summary: 'Выдать роль.'})
