@@ -7,7 +7,9 @@ export class ViewRoleDto  {
         this.id = role.id;
         this.value = role.value;
         this.description = role.description;
-        this.users = role.users.map(user => new ViewUserDto(user));
+        if(role.users) {
+            this.users = role.users.map(user => new ViewUserDto(user));
+        }
     }
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'id-роли.'})
     readonly id: string;

@@ -17,12 +17,17 @@ export class RolesService {
     }
 
     async getAll(): Promise<ViewRoleDto[]> {
-        const roles = await this.roleRepository.findAll({include: {all: true}});
+        const roles = await this.roleRepository.findAll({
+            include: {all: true}
+        });
         return roles.map(role => new ViewRoleDto(role));
     }
 
     async getByValue(value: string): Promise<ViewRoleDto>{
-        const role = await this.roleRepository.findOne({where: {value}});
+        const role = await this.roleRepository.findOne({
+            where: {value},
+            include: {all: true}
+        });
         return new ViewRoleDto(role);
     }
 

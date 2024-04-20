@@ -39,6 +39,7 @@ export class UsersService {
             where:{email},
             include: {all: true}
         });
+        console.log(user);
         return new ViewUserDto(user);
     }
 
