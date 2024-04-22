@@ -14,6 +14,9 @@ export class RolesController {
 
     @ApiOperation({summary: 'Создать роль.'})
     @ApiResponse({status: 200, type: ViewRoleDto})
+    @Roles('admin')
+    @UseGuards(RolesGuard)
+    @UsePipes(ValidationPipe)
     @UsePipes(ValidationPipe)
     @Post()
     createRole(@Body() dto: CreateRoleDto) {
