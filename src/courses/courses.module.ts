@@ -8,12 +8,13 @@ import { FilesModule } from 'src/files/files.module';
 import { UsersModule } from 'src/users/users.module';
 import { RolesModule } from 'src/roles/roles.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { UserCourses } from './user-courses.model.dto';
 
 @Module({
   providers: [CoursesService],
   controllers: [CoursesController],
   imports: [
-    SequelizeModule.forFeature([User, Course]),
+    SequelizeModule.forFeature([User, Course, UserCourses]),
     FilesModule,
     UsersModule,
     RolesModule,

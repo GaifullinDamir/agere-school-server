@@ -12,6 +12,7 @@ import { Course } from "./courses/courses.model";
 import { FilesModule } from './files/files.module';
 import { ServeStaticModule } from "@nestjs/serve-static";
 import * as path from "path";
+import { UserCourses } from "./courses/user-courses.model.dto";
 
 @Module({
     controllers: [],
@@ -27,7 +28,7 @@ import * as path from "path";
           username: process.env.POSTGRES_USERNAME,
           password: process.env.POSTGRES_PASSWORD ,
           database: process.env.POSTGRES_DATABASE,
-          models: [User, Role, UserRoles, Course],
+          models: [User, Role, UserRoles, Course, UserCourses],
           autoLoadModels: true
         }),
         ServeStaticModule.forRoot({
