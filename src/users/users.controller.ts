@@ -11,6 +11,7 @@ import { CustomValidationPipe } from 'src/pipes/validation.pipe';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PickupRoleDto } from './dto/pickup-role.dto';
 
 @ApiTags('Пользователи')
 @Controller('users')
@@ -63,7 +64,7 @@ export class UsersController {
             return this.usersService.update(id, dto, actor, file);
     }
 
-    @ApiOperation({summary: 'Удалить пользщователя по id.'})
+    @ApiOperation({summary: 'Удалить пользователя по id.'})
     @ApiResponse({status: 200, type: Number})
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
@@ -76,8 +77,17 @@ export class UsersController {
     @ApiResponse({status: 200})
     @Roles('admin')
     @UseGuards(RolesGuard)
-    @Post('/role')
-    addRole(@Body() dto: AddRoleDto) {
-        return this.usersService.addRole(dto);
+    @Post('/role/:id')
+    addRole(@Param('id') userId: string, @Body() dto: AddRoleDto) {
+        return this.usersService.addRole(userId, dto);
+    }
+
+    @ApiOperation({summary: 'Забрать роль.'})
+    @ApiResponse({status: 200})
+    @Roles('admin')
+    @UseGuards(RolesGuard)
+    @Put('/role/:id')
+    pickupRole(@Param('id') id: string, @Body() dto: PickupRoleDto) {
+        return this.usersService.pickupRole(id, dto);
     }
 }

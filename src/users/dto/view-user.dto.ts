@@ -12,11 +12,14 @@ export class ViewUserDto {
         this.logo = user.logo;
         this.email = user.email;
         this.password = user.password;
+        
         if(user.roles) {
             this.roles = user.roles.map(role => new ViewRoleDto(role));
         }
         
-        this.courses = user.courses.map(course => new ViewCourseDto(course));
+        if(user.courses) {
+            this.courses = user.courses.map(course => new ViewCourseDto(course)); 
+        }
     }
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
     readonly id: string;

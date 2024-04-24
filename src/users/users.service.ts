@@ -9,6 +9,7 @@ import { FilesService } from 'src/files/files.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { ViewUserDto } from './dto/view-user.dto';
+import { PickupRoleDto } from './dto/pickup-role.dto';
 
 @Injectable()
 export class UsersService {
@@ -71,13 +72,24 @@ export class UsersService {
         throw new HttpException('Нет доступа к данному пользователю.', HttpStatus.FORBIDDEN);
     }
 
-    async addRole(dto: AddRoleDto) {
-        const user = await this.userRepository.findByPk(dto.userId);
+    async addRole(userId: string, dto: AddRoleDto): Promise<AddRoleDto> {
+        const user = await this.userRepository.findByPk(userId);
         const role = await this.roleService.getByValue(dto.value);
         if (role && user) {
             await user.$add('role', role.id);
             return dto;
         }
         throw new HttpException('Пользователь или роль не найдены.', HttpStatus.NOT_FOUND);
+    }
+
+    async pickupRole(id: string, dto: PickupRoleDto): Promise<PickupRoleDto> {
+        const user = await this.userRepository.findByPk(id);
+        const role = await this.roleService.getByValue(dto.value);
+        if (role && user) {
+
+            await user.$remove('role', role.id);
+            return dto;
+        }
+        throw new HttpException('Пользовательб или роли не найдены.', HttpStatus.NOT_FOUND);
     }
 }

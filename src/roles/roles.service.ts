@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Role } from './roles.model';
@@ -12,14 +12,22 @@ export class RolesService {
 
     async create(dto: CreateRoleDto): Promise<ViewRoleDto> {
         const id = uuidv1();
-        const role = await this.roleRepository.create({...dto, id});
-        return new ViewRoleDto(role);
+        const role = await this.getByValue(dto.value);
+        console.log(role);
+        if (!role) {
+            const newRole = await this.roleRepository.create({...dto, id});
+            return new ViewRoleDto(newRole);
+        }
+        throw new HttpException('Такая роль уже существует.', HttpStatus.BAD_REQUEST);
     }
 
     async getAll(): Promise<ViewRoleDto[]> {
-        const roles = await this.roleRepository.findAll({
+        let roles = await this.roleRepository.findAll({
             include: {all: true}
         });
+        if (!roles) {
+            roles = [];
+        }
         return roles.map(role => new ViewRoleDto(role));
     }
 
@@ -28,7 +36,11 @@ export class RolesService {
             where: {value},
             include: {all: true}
         });
-        return new ViewRoleDto(role);
+        if (role) {
+            return new ViewRoleDto(role);
+        }
+        throw new HttpException('Роль не найдена', HttpStatus.NOT_FOUND);
+        
     }
 
     async update(id: string, dto: UpdateRoleDto): Promise<Number[]>{

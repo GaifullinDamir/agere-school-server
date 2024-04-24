@@ -17,7 +17,6 @@ export class RolesController {
     @Roles('admin')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
-    @UsePipes(ValidationPipe)
     @Post()
     createRole(@Body() dto: CreateRoleDto) {
         return this.roleService.create(dto);

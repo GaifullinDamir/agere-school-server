@@ -50,20 +50,6 @@ export class Course extends Model<Course, CourseCreationAttributes> {
     @Column({type: DataType.UUID})
     userId: string;
 
-    // @ApiProperty({
-    //     example: {
-    //         "id": "dc255b20-f911-11ee-a962-23956c5947c1",
-    //         "name": "Андрей",
-    //         "surname": "Горохов",
-    //         "patronimic": "Сергеевич",
-    //         "logo": null,
-    //         "email": "andrew@mail.ru",
-    //         "password": "12345",
-    //         "createdAt": "2024-04-12T21:15:59.829Z",
-    //         "updatedAt": "2024-04-12T21:15:59.829Z"
-    //     },
-    //     description: 'Создатель курса.'
-    // })
     @BelongsTo(() => User)
     author: User;
 }
