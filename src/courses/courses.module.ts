@@ -16,9 +16,9 @@ import { UserCourses } from './user-courses.model.dto';
   imports: [
     SequelizeModule.forFeature([User, Course, UserCourses]),
     FilesModule,
-    UsersModule,
     RolesModule,
-    forwardRef(() => AuthModule)
+    forwardRef(() => AuthModule),
+    forwardRef(() => UsersModule)
   ],
   exports: [CoursesService]
 })

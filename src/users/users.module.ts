@@ -10,6 +10,7 @@ import { UserRoles } from 'src/roles/user-roles.model';
 import { Course } from 'src/courses/courses.model';
 import { FilesModule } from 'src/files/files.module';
 import { UserCourses } from 'src/courses/user-courses.model.dto';
+import { CoursesModule } from 'src/courses/courses.module';
 
 @Module({
   controllers: [UsersController],
@@ -18,7 +19,8 @@ import { UserCourses } from 'src/courses/user-courses.model.dto';
     SequelizeModule.forFeature([User, Role, UserRoles, Course, UserCourses]),
     RolesModule,
     FilesModule,
-    forwardRef(() => AuthModule)
+    forwardRef(() => AuthModule),
+    forwardRef(() => CoursesModule)
   ],
   exports: [
     UsersService, 

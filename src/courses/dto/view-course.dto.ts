@@ -11,7 +11,10 @@ export class ViewCourseDto{
         this.logo = course.logo;
         this.rating = course.rating;
         this.userId = course.userId;
-        this.author = new ViewUserDto(course.author);
+        if(course.author) {
+            this.author = new ViewUserDto(course.author);
+        }
+        
     }
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
     id: string;

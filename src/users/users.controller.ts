@@ -38,7 +38,7 @@ export class UsersController {
 
     @ApiOperation({summary: 'Получить пользователя по id.'})
     @ApiResponse({status: 200, type: User})
-    @Roles('admin')
+    @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @Get('/:id')
     getUserById(@Param('id') id: string) {
@@ -90,4 +90,15 @@ export class UsersController {
     pickupRole(@Param('id') id: string, @Body() dto: PickupRoleDto) {
         return this.usersService.pickupRole(id, dto);
     }
+
+    @ApiOperation({summary: 'Забрать роль.'})
+    @ApiResponse({status: 200})
+    @Roles('user')
+    @UseGuards(RolesGuard)
+    @Post('/course/:id')
+    subscribeToCurse(@Param('id') courseId: string, @GetUser() actor: any) {
+        return this.usersService.subscribeToCourse(courseId, actor.id);
+    }
+
+
 }

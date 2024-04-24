@@ -10,20 +10,21 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { ViewUserDto } from './dto/view-user.dto';
 import { PickupRoleDto } from './dto/pickup-role.dto';
+import { CoursesService } from 'src/courses/courses.service';
 
 @Injectable()
 export class UsersService {
 
     constructor(@InjectModel(User) private userRepository: typeof User,
-        private roleService: RolesService,
-        private filesService: FilesService) {
+        private rolesService: RolesService,
+        private filesService: FilesService,
+        private coursesService: CoursesService) {
     }
     async create(dto: CreateUserDto) : Promise<ViewUserDto>{
         const id = uuidv1();
         const user = await this.userRepository.create({...dto, id});
-        const role = await this.roleService.getByValue("user");
+        const role = await this.rolesService.getByValue("user");
         await user.$set('roles', [role.id]);
-        // user.roles = [role];
         const updatedUser = await this.userRepository.findOne({where: {id}, include: {all: true}}); 
         return new ViewUserDto(updatedUser);
     }
@@ -40,12 +41,16 @@ export class UsersService {
             where:{email},
             include: {all: true}
         });
-        console.log(user);
-        return new ViewUserDto(user);
+        // console.log(user);
+        if (user) {
+            return new ViewUserDto(user);
+        }
+        throw new HttpException('Пользователь не найден.', HttpStatus.NOT_FOUND);
+        
     }
 
     async getById(id: string): Promise<ViewUserDto> {
-        const user = await this.userRepository.findOne({where: {id}});
+        const user = await this.userRepository.findOne({where: {id}, include: {all: true}});
         return new ViewUserDto(user);
     }
 
@@ -74,9 +79,9 @@ export class UsersService {
 
     async addRole(userId: string, dto: AddRoleDto): Promise<AddRoleDto> {
         const user = await this.userRepository.findByPk(userId);
-        const role = await this.roleService.getByValue(dto.value);
+        const role = await this.rolesService.getByValue(dto.value);
         if (role && user) {
-            await user.$add('role', role.id);
+            await user.$add('roles', role.id);
             return dto;
         }
         throw new HttpException('Пользователь или роль не найдены.', HttpStatus.NOT_FOUND);
@@ -84,12 +89,25 @@ export class UsersService {
 
     async pickupRole(id: string, dto: PickupRoleDto): Promise<PickupRoleDto> {
         const user = await this.userRepository.findByPk(id);
-        const role = await this.roleService.getByValue(dto.value);
+        const role = await this.rolesService.getByValue(dto.value);
         if (role && user) {
 
-            await user.$remove('role', role.id);
+            await user.$remove('roles', role.id);
             return dto;
         }
-        throw new HttpException('Пользовательб или роли не найдены.', HttpStatus.NOT_FOUND);
+        throw new HttpException('Пользователь или роли не найдены.', HttpStatus.NOT_FOUND);
+    }
+
+    async subscribeToCourse(courseId: string, actorId: string) {
+        const user = await this.userRepository.findByPk(actorId);
+        // console.log(user);
+        const course = await this.coursesService.getById(courseId);
+        // console.log(course);
+        if (course && user) {
+            console.log(course)
+            return await user.$add('studentCourses', course.id);
+            
+        }
+        throw new HttpException('Пользователь или курс не найдены.', HttpStatus.NOT_FOUND);
     }
 }
