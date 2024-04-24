@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { User } from "src/users/users.model";
+import { UserCourses } from "./user-courses.model.dto";
 
 
 interface CourseCreationAttributes {
@@ -49,6 +50,9 @@ export class Course extends Model<Course, CourseCreationAttributes> {
     @ForeignKey(() => User)
     @Column({type: DataType.UUID})
     userId: string;
+
+    @BelongsToMany(() => User, () => UserCourses)
+    students: User[];
 
     @BelongsTo(() => User)
     author: User;
