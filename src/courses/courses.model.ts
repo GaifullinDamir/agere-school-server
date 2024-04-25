@@ -2,6 +2,9 @@ import { ApiProperty } from "@nestjs/swagger";
 import { BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { User } from "src/users/users.model";
 import { UserCourses } from "./user-courses.model.dto";
+import { HasMany } from "sequelize-typescript";
+import { CoursesModule } from "./courses.module";
+import { LearnModule } from "src/learn-modules/learn-modules.model";
 
 
 interface CourseCreationAttributes {
@@ -56,4 +59,7 @@ export class Course extends Model<Course, CourseCreationAttributes> {
 
     @BelongsTo(() => User)
     author: User;
+
+    @HasMany(() => LearnModule)
+    learnModules: LearnModule[];
 }

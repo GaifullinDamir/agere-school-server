@@ -13,6 +13,7 @@ import { FilesModule } from './files/files.module';
 import { ServeStaticModule } from "@nestjs/serve-static";
 import * as path from "path";
 import { UserCourses } from "./courses/user-courses.model.dto";
+import { LearnModule } from "./learn-modules/learn-modules.model";
 
 @Module({
     controllers: [],
@@ -28,7 +29,7 @@ import { UserCourses } from "./courses/user-courses.model.dto";
           username: process.env.POSTGRES_USERNAME,
           password: process.env.POSTGRES_PASSWORD ,
           database: process.env.POSTGRES_DATABASE,
-          models: [User, Role, UserRoles, Course, UserCourses],
+          models: [User, Role, UserRoles, Course, UserCourses, LearnModule],
           autoLoadModels: true
         }),
         ServeStaticModule.forRoot({
@@ -39,6 +40,7 @@ import { UserCourses } from "./courses/user-courses.model.dto";
         AuthModule,
         CoursesModule,
         FilesModule,
+        LearnModule
       ]
 })
 export class AppModule {
