@@ -14,6 +14,7 @@ import { ServeStaticModule } from "@nestjs/serve-static";
 import * as path from "path";
 import { UserCourses } from "./courses/user-courses.model.dto";
 import { LearnModule } from "./learn-modules/learn-modules.model";
+import { LearnModulesModule } from "./learn-modules/learn-modules.module";
 
 @Module({
     controllers: [],
@@ -40,7 +41,7 @@ import { LearnModule } from "./learn-modules/learn-modules.model";
         AuthModule,
         CoursesModule,
         FilesModule,
-        LearnModule
+        LearnModulesModule
       ]
 })
 export class AppModule {

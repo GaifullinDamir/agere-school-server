@@ -13,7 +13,9 @@ export class LearnModulesService {
 
     async create(actor: any, courseId: string, dto: CreateLearnModuleDto): Promise<LearnModule> {
         const course = await this.courseRepository.findOne({where: {id: courseId}});
+        console.log(course)
         if (course && course.userId === actor.id) {
+            
             const modules = await this.learnModuleRepository.findAll();
             let position: number; 
             if(!modules.length) {
@@ -28,7 +30,13 @@ export class LearnModulesService {
         throw new HttpException('Нет такого курса или у пользователя нет доступа к курса.',  HttpStatus.BAD_REQUEST);
     }
 
-    // async getAll(courseId:): Promise<ViewLearnModuleDto[]> {
-    //     const module
-    // }
+    async getAll(courseId: string): Promise<ViewLearnModuleDto[]> {
+        const modules = await this.learnModuleRepository.findAll({where: {courseId}});
+        if (modules.length) {
+            return modules.map(module => new ViewLearnModuleDto(module)).sort((module1, module2) => {
+                return module1.position - module2.position;
+            });
+        }
+        return [];
+    }
 }

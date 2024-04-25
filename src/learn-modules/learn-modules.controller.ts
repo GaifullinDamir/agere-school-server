@@ -23,12 +23,12 @@ export class LearnModulesController {
         return this.learnModuleService.create(actor, courseId, dto);
     }
 
-    // @ApiOperation({summary: 'Получить все модули.'})
-    // @ApiResponse({status: 200, type: [LearnModule]})
-    // @Get()
-    // getAllCourses() {
-    //     return this.learnModuleService.getAll();
-    // }
+    @ApiOperation({summary: 'Получить все модули.'})
+    @ApiResponse({status: 200, type: [LearnModule]})
+    @Get('/:courseId')
+    getAllModules(@Param('courseId') courseId: string) {
+        return this.learnModuleService.getAll(courseId);
+    }
 
     // @ApiOperation({summary: 'Получить модуль по id.'})
     // @ApiResponse({status: 200, type: LearnModule})

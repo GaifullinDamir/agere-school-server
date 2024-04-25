@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BelongsTo, Column, DataType, ForeignKey, Model } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
 import { Course } from "src/courses/courses.model";
 
 
@@ -11,6 +11,9 @@ interface LearnModuleCreationAttributes {
     courseId: string;
 }
 
+@Table({
+    tableName: 'modules'
+})
 export class LearnModule extends Model<LearnModule, LearnModuleCreationAttributes> {
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
     @Column({type: DataType.UUID, unique: true, primaryKey: true})

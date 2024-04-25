@@ -1,12 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsString } from "class-validator";
+import { IsJSON, IsString } from "class-validator";
 
 export class CreateLearnModuleDto {
     @ApiProperty({example: 'Имя модуля.', description: 'Имя модуля.'})
     @IsString({message: 'name-должен быть строкой.'})
-    name: string;
+    readonly name: string;
 
-    @ApiProperty({example: {"description": "В данном модуле..."}, description: 'Описание модуля.'})
-    @IsString({message: 'description-должен быть JSON-файл.'})
-    description: string;
+    @ApiProperty({example: '{"description": "В данном модуле..."}', description: 'Описание модуля.'})
+    // @IsJSON({message: 'description-должен быть JSON-файл.'})
+    readonly description: string;
 }

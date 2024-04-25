@@ -15,4 +15,4 @@ import { AuthModule } from 'src/auth/auth.module';
   ],
   exports: [LearnModulesService]
 })
-export class CourseModulesModule {}
+export class LearnModulesModule {}

@@ -21,7 +21,7 @@ export class ViewLearnModuleDto {
     @ApiProperty({example: {"descriptiom": "В данном модуле..."}, description: 'Описание модуля.'})
     readonly description: string;
 
-    @ApiProperty({example: 0, description: 'Порядковый номер модуля.')
+    @ApiProperty({example: 0, description: 'Порядковый номер модуля.'})
     readonly position: number;
 
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
