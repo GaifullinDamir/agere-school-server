@@ -99,6 +99,4 @@ export class UsersController {
     subscribeToCurse(@Param('id') courseId: string, @GetUser() actor: any) {
         return this.usersService.subscribeToCourse(courseId, actor.id);
     }
-
-
 }
