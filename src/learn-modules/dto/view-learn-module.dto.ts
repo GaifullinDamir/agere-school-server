@@ -6,22 +6,26 @@ export class ViewLearnModuleDto {
         this.id = learnModule.id;
         this.name = learnModule.name;
         this.description = learnModule.description;
+        this.position = learnModule.position;
         this.courseId =  learnModule.courseId;
         if (learnModule.course) {
             this.course = new ViewCourseDto(learnModule.course);
         }
     }
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
-    id: string;
+    readonly id: string;
     
     @ApiProperty({example: 'Имя модуля.', description: 'Имя модуля.'})
-    name: string;
+    readonly name: string;
 
     @ApiProperty({example: {"descriptiom": "В данном модуле..."}, description: 'Описание модуля.'})
-    description: string;
+    readonly description: string;
+
+    @ApiProperty({example: 0, description: 'Порядковый номер модуля.')
+    readonly position: number;
 
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
-    courseId: string;
+    readonly courseId: string;
 
     @ApiProperty({example: [
         {
@@ -36,5 +40,5 @@ export class ViewLearnModuleDto {
             "updatedAt": "2024-04-18T20:04:47.801Z"
         }
         ], description: 'Курс модуля.'})
-    course: ViewCourseDto;
+    readonly course: ViewCourseDto;
 }

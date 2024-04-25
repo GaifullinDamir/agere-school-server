@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString } from "class-validator";
+import { IsNumber, IsString } from "class-validator";
 
 export class CreateLearnModuleDto {
     @ApiProperty({example: 'Имя модуля.', description: 'Имя модуля.'})
