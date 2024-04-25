@@ -3,14 +3,14 @@ import { IsJSON, IsString } from "class-validator";
 
 export class CreateCourseDto{
     @ApiProperty({example: 'Course name', description: 'Название курса.'})
-    @IsString({message: 'Должно быть строкой.'})
+    @IsString({message: 'name-должно быть строкой.'})
     readonly name: string;
 
-    @IsString({message: 'Должно быть строкой.'})
+    @IsString({message: 'category-должно быть строкой.'})
     @ApiProperty({example: 'Категория', description: 'Категория курса.'})
     readonly category: string; 
 
-    @IsJSON({message: 'Должен быть JSON-файл'})
+    @IsJSON({message: 'description-должен быть JSON-файл'})
     @ApiProperty(
         {
             example: '{"short_descr": "Короткое описание.", "learn_results_descr": "Результаты обучения.", "about_course_descr": "О чем курс.", "initial_requirements_descr": "Начальные требования." }',

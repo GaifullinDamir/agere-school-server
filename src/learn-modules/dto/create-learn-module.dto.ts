@@ -9,8 +9,4 @@ export class CreateLearnModuleDto {
     @ApiProperty({example: {"description": "В данном модуле..."}, description: 'Описание модуля.'})
     @IsString({message: 'description-должен быть JSON-файл.'})
     description: string;
-
-    @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
-    @IsString({message: 'courseId-строка UUID.'})
-    courseId: string;
 }

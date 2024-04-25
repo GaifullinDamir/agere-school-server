@@ -32,7 +32,7 @@ export class CoursesController {
         return this.courseService.create(dto,user.id, logo);
     }
 
-    @ApiOperation({summary: 'Получить курсы.'})
+    @ApiOperation({summary: 'Получить все курсы.'})
     @ApiResponse({status: 200, type: [Course]})
     @Get()
     getAllCourses() {
