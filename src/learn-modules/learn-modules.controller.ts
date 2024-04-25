@@ -25,17 +25,17 @@ export class LearnModulesController {
 
     @ApiOperation({summary: 'Получить все модули.'})
     @ApiResponse({status: 200, type: [LearnModule]})
-    @Get('/:courseId')
+    @Get('course/:courseId')
     getAllModules(@Param('courseId') courseId: string) {
         return this.learnModuleService.getAll(courseId);
     }
 
-    // @ApiOperation({summary: 'Получить модуль по id.'})
-    // @ApiResponse({status: 200, type: LearnModule})
-    // @Get('/:id')
-    // getCourseById(@Param('id') id: string) {
-    //     return this.learnModuleService.getById(id);
-    // }
+    @ApiOperation({summary: 'Получить модуль по id.'})
+    @ApiResponse({status: 200, type: LearnModule})
+    @Get('/:id')
+    getModuleById(@Param('id') id: string) {
+        return this.learnModuleService.getById(id);
+    }
 
     // @ApiOperation({summary: 'Изменить курс.'})
     // @ApiResponse({status: 200, type: [Number]})

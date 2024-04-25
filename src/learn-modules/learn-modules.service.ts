@@ -31,12 +31,20 @@ export class LearnModulesService {
     }
 
     async getAll(courseId: string): Promise<ViewLearnModuleDto[]> {
-        const modules = await this.learnModuleRepository.findAll({where: {courseId}});
+        const modules = await this.learnModuleRepository.findAll({where: {courseId}, include: {all: true}});
         if (modules.length) {
             return modules.map(module => new ViewLearnModuleDto(module)).sort((module1, module2) => {
                 return module1.position - module2.position;
             });
         }
-        return [];
+        throw new HttpException('Модули не найдены.', HttpStatus.NOT_FOUND);
+    }
+
+    async getById(moduleId: string): Promise<ViewLearnModuleDto> {
+        const module = await this.learnModuleRepository.findByPk(moduleId, {include: {all: true}});
+        if (module) {
+            return new ViewLearnModuleDto(module);
+        }
+        throw new HttpException('Модуль не найден.', HttpStatus.NOT_FOUND);
     }
 }
