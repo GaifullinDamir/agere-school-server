@@ -20,7 +20,7 @@ export class LearnModulesController {
     @UsePipes(ValidationPipe)
     @Post('/:courseId')
     createModule(@GetUser() actor: any, @Param('courseId') courseId: string, @Body() dto: CreateLearnModuleDto) {
-        return this.learnModuleService.create(actor.id, courseId, dto);
+        return this.learnModuleService.create(actor, courseId, dto);
     }
 
     @ApiOperation({summary: 'Получить все модули.'})
