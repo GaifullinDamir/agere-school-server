@@ -57,9 +57,24 @@ export class LessonsService {
                 const role = actor.roles.find(role => role.value === 'admin');
                 if (course.userId === actor.id || role) {
                     const message = await this.changePosition('update', lesson.moduleId, lesson.position, dto.position);
-                    // console.log(message);
                     if (message) throw new HttpException(message, HttpStatus.BAD_REQUEST);
                     return await lesson.update({...dto});
+                }
+                throw new HttpException('Нет доступа к уроку.', HttpStatus.FORBIDDEN);
+            }
+            throw new HttpException('Урок не найден.', HttpStatus.NOT_FOUND);
+        }
+
+
+        async delete(id: string, actor: any) {
+            const lesson = await this.lessonRepository.findOne({where: {id}, include: {all: true}});
+            if (lesson) {
+                const course = (await this.learnModuleService.getById(lesson.moduleId)).course;
+                const role = actor.roles.find(role => role.value === 'admin');
+                if (course.userId === actor.id || role) {
+                    const message = await this.changePosition('delete', lesson.moduleId, lesson.position);
+                    if (message) throw new HttpException(message, HttpStatus.BAD_REQUEST);
+                    return await lesson.destroy();
                 }
                 throw new HttpException('Нет доступа к уроку.', HttpStatus.FORBIDDEN);
             }

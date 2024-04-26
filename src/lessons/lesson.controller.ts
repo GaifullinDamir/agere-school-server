@@ -39,7 +39,7 @@ export class LessonsController {
     }
 
     @ApiOperation({summary: 'Изменить урок.'})
-    @ApiResponse({status: 200, type: [Number]})
+    @ApiResponse({status: 200, type: Lesson})
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -48,12 +48,12 @@ export class LessonsController {
         return this.lessonService.update(id, dto, actor);
     }
 
-    // @ApiOperation({summary: 'Удалить модуль по id.'})
-    // @ApiResponse({status: 200, type: Number})
-    // @Roles('admin', 'user')
-    // @UseGuards(RolesGuard)
-    // @Delete('/:id')
-    // deleteModule(@Param('id') id: string,  @GetUser() actor: any) {
-    //     return this.learnModuleService.delete(id, actor);
-    // }
+    @ApiOperation({summary: 'Удалить урок по id.'})
+    @ApiResponse({status: 200})
+    @Roles('admin', 'user')
+    @UseGuards(RolesGuard)
+    @Delete('/:id')
+    deleteModule(@Param('id') id: string,  @GetUser() actor: any) {
+        return this.lessonService.delete(id, actor);
+    }
 }
