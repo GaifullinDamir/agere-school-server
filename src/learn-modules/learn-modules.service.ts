@@ -55,7 +55,7 @@ export class LearnModulesService {
             const course = await this.courseRepository.findOne({where:{id: module.courseId}});
             const role = actor.roles.find(role => role.value === 'admin');
             if (course.userId === actor.id || role) {
-                const message = await this.changePosition(dto.position, module.position, module.courseId);
+                const message = await this.changePosition( 'update', module.courseId,  module.position, dto.position );
                 if (message) throw new HttpException(message, HttpStatus.BAD_REQUEST);
                 return await module.update({...dto});
             }
@@ -65,15 +65,30 @@ export class LearnModulesService {
     }
 
 
-    private async getAllModelsByCourseId(courseId: string) {
+    async delete(id: string, actor: any) {
+        const module = await this.learnModuleRepository.findOne({where:{id}});
+        if (module) {
+            const course = await this.courseRepository.findOne({where:{id: module.courseId}});
+            const role = actor.roles.find(role => role.value === 'admin');
+            if (course.userId === actor.id || role) {
+                const message = await this.changePosition('delete', module.courseId, module.position);
+                if (message) throw new HttpException(message, HttpStatus.BAD_REQUEST);
+                return await module.destroy();
+            }
+            throw new HttpException('Нет доступа к модулю.', HttpStatus.FORBIDDEN);
+        }
+        throw new HttpException('Модуль не найден.', HttpStatus.NOT_FOUND);
+    }
+
+    private async getAllModulesByCourseId(courseId: string) {
         const modules = await this.learnModuleRepository.findAll({where:{courseId}});
         return modules;
     }
 
-    private async changePosition(newPosition: number | undefined, oldPosition: number, courseId: string) {
-        if (newPosition || newPosition === 0) {
+    private async changePosition(operatonType: string, courseId: string, oldPosition: number, newPosition?: number | undefined,) {
+        if (operatonType === 'update' && (newPosition || newPosition === 0) ) {
             if (newPosition < 0) return 'Позиция не может быть меньше 0.'
-            const modules = await this.getAllModelsByCourseId(courseId);
+            const modules = await this.getAllModulesByCourseId(courseId);
             if (newPosition > modules.length - 1) return 'Позиция не должна быть больше, чем количество модулей - 1.';
             
             if (newPosition != oldPosition) {
@@ -82,13 +97,18 @@ export class LearnModulesService {
                         if (module.position >= oldPosition && module.position <= newPosition) {
                             await module.update({position: module.position - 1});
                         }
-                    } else if (newPosition < oldPosition){
+                    } else if (newPosition < oldPosition) {
                         if (module.position < oldPosition && module.position >= newPosition) {
                             await module.update({position: module.position + 1});
                         }
                     }
                 })
             }
+        } else if (operatonType === 'delete') {
+            const modules = await this.getAllModulesByCourseId(courseId);
+            modules.forEach(async module => {
+                if (module.position > oldPosition) await module.update({position: module.position - 1});
+            });
         }
     }
 }

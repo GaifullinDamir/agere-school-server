@@ -47,12 +47,12 @@ export class LearnModulesController {
         return this.learnModuleService.update(id, dto, actor);
     }
 
-    // @ApiOperation({summary: 'Удалить модуль по id.'})
-    // @ApiResponse({status: 200, type: Number})
-    // @Roles('admin', 'user')
-    // @UseGuards(RolesGuard)
-    // @Delete('/:id')
-    // deleteCourse(@Param('id') id: string,  @GetUser() actor: any) {
-    //     return this.learnModuleService.delete(id, actor);
-    // }
+    @ApiOperation({summary: 'Удалить модуль по id.'})
+    @ApiResponse({status: 200, type: Number})
+    @Roles('admin', 'user')
+    @UseGuards(RolesGuard)
+    @Delete('/:id')
+    deleteModule(@Param('id') id: string,  @GetUser() actor: any) {
+        return this.learnModuleService.delete(id, actor);
+    }
 }
