@@ -110,6 +110,6 @@ export class LessonsService {
                 lessons.forEach(async lesson => {
                     if (lesson.position > oldPosition) await lesson.update({position: lesson.position - 1});
                 });
-            }git 
+            }
         }
 }
