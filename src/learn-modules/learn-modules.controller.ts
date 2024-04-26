@@ -7,6 +7,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { CreateLearnModuleDto } from './dto/create-learn-module.dto';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { UpdatetLearnModuleDto } from './dto/update-learn-module.dto';
+import { ViewLearnModuleDto } from './dto/view-learn-module.dto';
 
 @ApiTags('Модули')
 @Controller('modules')

@@ -41,5 +41,5 @@ export class LearnModule extends Model<LearnModule, LearnModuleCreationAttribute
     course: Course;
 
     @HasMany(() => Lesson)
-    lessons: Lesson;
+    lessons: Lesson[];
 }

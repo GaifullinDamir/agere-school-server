@@ -1,6 +1,7 @@
 import { ViewCourseDto } from "src/courses/dto/view-course.dto";
 import { LearnModule } from "../learn-modules.model";
 import { ApiProperty } from "@nestjs/swagger";
+import { ViewLessonDto } from "src/lessons/dto/view-lesson.dto";
 export class ViewLearnModuleDto {
     constructor(learnModule: LearnModule) {
         this.id = learnModule.id;
@@ -10,6 +11,9 @@ export class ViewLearnModuleDto {
         this.courseId =  learnModule.courseId;
         if (learnModule.course) {
             this.course = new ViewCourseDto(learnModule.course);
+        }
+        if (learnModule.lessons) {
+            this.lessons = learnModule.lessons.map(lesson => new ViewLessonDto(lesson))
         }
     }
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
@@ -41,4 +45,6 @@ export class ViewLearnModuleDto {
         }
         ], description: 'Курс модуля.'})
     readonly course: ViewCourseDto;
+
+    readonly lessons: ViewLessonDto[];
 }

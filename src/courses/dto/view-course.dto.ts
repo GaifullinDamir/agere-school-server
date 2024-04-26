@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { ViewUserDto } from "src/users/dto/view-user.dto";
 import { Course } from "../courses.model";
+import { ViewLearnModuleDto } from "src/learn-modules/dto/view-learn-module.dto";
 
 export class ViewCourseDto{
     constructor(course: Course) {
@@ -14,32 +15,36 @@ export class ViewCourseDto{
         if(course.author) {
             this.author = new ViewUserDto(course.author);
         }
+
+        if (course.learnModules) {
+            this.learnModules = course.learnModules.map(learnModule => new ViewLearnModuleDto(learnModule));
+        }
         
     }
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
-    id: string;
+    readonly id: string;
 
     @ApiProperty({example: 'Course name', description: 'Название курса.'})
-    name: string;
+    readonly name: string;
 
     @ApiProperty({example: 'Категория', description: 'Категория курса.'})
-    category: string;
+    readonly category: string;
 
     @ApiProperty(
         {
             example: '{"short_descr": "Короткое описание.", "learn_results_descr": "Результаты обучения.", "about_course_descr": "О чем курс.", "initial_requirements_descr": "Начальные требования." }',
             description: 'Описание курса (JSON-файл. Структура свободная).'
         })
-    description: string;
+    readonly description: string;
 
     @ApiProperty({example: 'image.jpeg', description: 'Логотип курса. Отправлять файл.'})
-    logo: string;
+    readonly logo: string;
 
     @ApiProperty({example: '0', description: 'Средний рейтинг курса.'})
-    rating: number;
+    readonly rating: number;
 
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'id создателя курса.'})
-    userId: string;
+    readonly userId: string;
 
     @ApiProperty({
         example: {
@@ -55,5 +60,7 @@ export class ViewCourseDto{
         },
         description: 'Создатель курса.'
     })
-    author: ViewUserDto;
+    readonly author: ViewUserDto;
+
+    readonly learnModules: ViewLearnModuleDto[];
 }

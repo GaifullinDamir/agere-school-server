@@ -6,14 +6,16 @@ import { Course } from 'src/courses/courses.model';
 import { v1 as uuidv1 } from 'uuid';
 import { LearnModule } from './learn-modules.model';
 import { UpdatetLearnModuleDto } from './dto/update-learn-module.dto';
+import { CoursesService } from 'src/courses/courses.service';
 
 @Injectable()
 export class LearnModulesService {
     constructor(@InjectModel(Course) private courseRepository: typeof Course,
-        @InjectModel(LearnModule) private learnModuleRepository: typeof LearnModule) {}
+        @InjectModel(LearnModule) private learnModuleRepository: typeof LearnModule,
+        private courseService: CoursesService) {}
 
     async create(actor: any, courseId: string, dto: CreateLearnModuleDto): Promise<LearnModule> {
-        const course = await this.courseRepository.findOne({where: {id: courseId}});
+        const course = await this.courseService.getById(courseId);
         if (course && course.userId === actor.id) {
             
             const modules = await this.learnModuleRepository.findAll();

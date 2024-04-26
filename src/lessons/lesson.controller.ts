@@ -24,8 +24,8 @@ export class LessonsController {
     }
 
     @ApiOperation({summary: 'Получить все уроки.'})
-    @ApiResponse({status: 200, type: [ViewLessonDto]})
-    @Get('mdoule/:moduleId')
+    @ApiResponse({status: 200, type: [Lesson]})
+    @Get('module/:moduleId')
     getAllModules(@Param('moduleId') moduleId: string) {
         return this.lessonService.getAll(moduleId);
     }
