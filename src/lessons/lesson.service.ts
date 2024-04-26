@@ -56,7 +56,8 @@ export class LessonsService {
                 const course = (await this.learnModuleService.getById(lesson.moduleId)).course;
                 const role = actor.roles.find(role => role.value === 'admin');
                 if (course.userId === actor.id || role) {
-                    const message = await this.changePosition('update', lesson.moduleId, lesson.position);
+                    const message = await this.changePosition('update', lesson.moduleId, lesson.position, dto.position);
+                    // console.log(message);
                     if (message) throw new HttpException(message, HttpStatus.BAD_REQUEST);
                     return await lesson.update({...dto});
                 }
@@ -74,7 +75,7 @@ export class LessonsService {
             if (operatonType === 'update' && (newPosition || newPosition === 0) ) {
                 if (newPosition < 0) return 'Позиция не может быть меньше 0.'
                 const lessons = await this.getAllLessonsByModuleId(moduleId);
-                if (newPosition > lessons.length - 1) return 'Позиция не должна быть больше, чем количество модулей - 1.';
+                if (newPosition > lessons.length - 1) return 'Позиция не должна быть больше, чем (количество уроков - 1).';
                 
                 if (newPosition != oldPosition) {
                     lessons.forEach( async lesson => {

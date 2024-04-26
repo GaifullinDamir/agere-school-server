@@ -90,7 +90,7 @@ export class LearnModulesService {
         if (operatonType === 'update' && (newPosition || newPosition === 0) ) {
             if (newPosition < 0) return 'Позиция не может быть меньше 0.'
             const modules = await this.getAllModulesByCourseId(courseId);
-            if (newPosition > modules.length - 1) return 'Позиция не должна быть больше, чем количество модулей - 1.';
+            if (newPosition > modules.length - 1) return 'Позиция не должна быть больше, чем (количество модулей - 1).';
             
             if (newPosition != oldPosition) {
                 modules.forEach( async module => {
