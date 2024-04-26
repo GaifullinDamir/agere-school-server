@@ -7,6 +7,7 @@ import { Lesson } from './lesson.model';
 import { CreateLessonDto } from './dto/create-lesson.dto';
 import { LessonsService } from './lesson.service';
 import { ViewLessonDto } from './dto/view-lesson.dto';
+import { UpdateLessonDto } from './dto/update-lesson.dto';
 
 @ApiTags('Уроки')
 @Controller('lessons')
@@ -30,22 +31,22 @@ export class LessonsController {
         return this.lessonService.getAll(moduleId);
     }
 
-    @ApiOperation({summary: 'Получить модуль по id.'})
+    @ApiOperation({summary: 'Получить урок по id.'})
     @ApiResponse({status: 200, type: [Lesson]})
     @Get('/:id')
     getLessonById(@Param('id') id: string) {
         return this.lessonService.getById(id);
     }
 
-    // @ApiOperation({summary: 'Изменить модуль.'})
-    // @ApiResponse({status: 200, type: [Number]})
-    // @Roles('admin', 'user')
-    // @UseGuards(RolesGuard)
-    // @UsePipes(ValidationPipe)
-    // @Put('/:id')
-    // updateCourse(@Param('id') id: string, @Body() dto: UpdatetLearnModuleDto, @GetUser() actor: any,) {
-    //     return this.learnModuleService.update(id, dto, actor);
-    // }
+    @ApiOperation({summary: 'Изменить урок.'})
+    @ApiResponse({status: 200, type: [Number]})
+    @Roles('admin', 'user')
+    @UseGuards(RolesGuard)
+    @UsePipes(ValidationPipe)
+    @Put('/:id')
+    updateCourse(@Param('id') id: string, @Body() dto: UpdateLessonDto, @GetUser() actor: any,) {
+        return this.lessonService.update(id, dto, actor);
+    }
 
     // @ApiOperation({summary: 'Удалить модуль по id.'})
     // @ApiResponse({status: 200, type: Number})

@@ -39,7 +39,7 @@ export class LearnModulesController {
     }
 
     @ApiOperation({summary: 'Изменить модуль.'})
-    @ApiResponse({status: 200, type: [Number]})
+    @ApiResponse({status: 200, type: LearnModule})
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -49,7 +49,7 @@ export class LearnModulesController {
     }
 
     @ApiOperation({summary: 'Удалить модуль по id.'})
-    @ApiResponse({status: 200, type: Number})
+    @ApiResponse({status: 200})
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @Delete('/:id')
