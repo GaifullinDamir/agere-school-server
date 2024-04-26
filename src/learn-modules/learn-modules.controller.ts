@@ -37,15 +37,15 @@ export class LearnModulesController {
         return this.learnModuleService.getById(id);
     }
 
-    // @ApiOperation({summary: 'Изменить курс.'})
-    // @ApiResponse({status: 200, type: [Number]})
-    // @Roles('admin', 'user')
-    // @UseGuards(RolesGuard)
-    // @UsePipes(ValidationPipe)
-    // @Put('/:id')
-    // updateCourse(@Param('id') id: string, @Body() dto: UpdatetLearnModuleDto, @GetUser() actor: any,) {
-    //     return this.learnModuleService.update(actor.id, id, dto);
-    // }
+    @ApiOperation({summary: 'Изменить модуль.'})
+    @ApiResponse({status: 200, type: [Number]})
+    @Roles('admin', 'user')
+    @UseGuards(RolesGuard)
+    @UsePipes(ValidationPipe)
+    @Put('/:id')
+    updateCourse(@Param('id') id: string, @Body() dto: UpdatetLearnModuleDto, @GetUser() actor: any,) {
+        return this.learnModuleService.update(id, dto, actor);
+    }
 
     // @ApiOperation({summary: 'Удалить модуль по id.'})
     // @ApiResponse({status: 200, type: Number})

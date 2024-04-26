@@ -50,14 +50,14 @@ export class CoursesService {
         const {fileName, description} = await this.processData(dto, image);
         const course = await this.courseRepository.findOne({where: {id}});
         if (course && course.userId === userId) {
-            const course = await this.courseRepository
+            const result = await this.courseRepository
             .update(
                 {
                     ...dto, id, description, userId, logo: fileName? fileName : dto.logo
                 },
                 {where: {id}}
             )
-            return course;
+            return result;
         }
         throw new HttpException('Данный курс не доступен.', HttpStatus.BAD_REQUEST);
     }

@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Course } from 'src/courses/courses.model';
 import { v1 as uuidv1 } from 'uuid';
 import { LearnModule } from './learn-modules.model';
+import { UpdatetLearnModuleDto } from './dto/update-learn-module.dto';
 
 @Injectable()
 export class LearnModulesService {
@@ -46,5 +47,48 @@ export class LearnModulesService {
             return new ViewLearnModuleDto(module);
         }
         throw new HttpException('Модуль не найден.', HttpStatus.NOT_FOUND);
+    }
+
+    async update(id: string, dto: UpdatetLearnModuleDto, actor: any): Promise<LearnModule> {
+        const module = await this.learnModuleRepository.findOne({where:{id}});
+        if (module) {
+            const course = await this.courseRepository.findOne({where:{id: module.courseId}});
+            const role = actor.roles.find(role => role.value === 'admin');
+            if (course.userId === actor.id || role) {
+                const message = await this.changePosition(dto.position, module.position, module.courseId);
+                if (message) throw new HttpException(message, HttpStatus.BAD_REQUEST);
+                return await module.update({...dto});
+            }
+            throw new HttpException('Нет доступа к модулю.', HttpStatus.FORBIDDEN);
+        }
+        throw new HttpException('Модуль не найден.', HttpStatus.NOT_FOUND);
+    }
+
+
+    private async getAllModelsByCourseId(courseId: string) {
+        const modules = await this.learnModuleRepository.findAll({where:{courseId}});
+        return modules;
+    }
+
+    private async changePosition(newPosition: number | undefined, oldPosition: number, courseId: string) {
+        if (newPosition || newPosition === 0) {
+            if (newPosition < 0) return 'Позиция не может быть меньше 0.'
+            const modules = await this.getAllModelsByCourseId(courseId);
+            if (newPosition > modules.length - 1) return 'Позиция не должна быть больше, чем количество модулей - 1.';
+            
+            if (newPosition != oldPosition) {
+                modules.forEach( async module => {
+                    if (newPosition > oldPosition) {
+                        if (module.position >= oldPosition && module.position <= newPosition) {
+                            await module.update({position: module.position - 1});
+                        }
+                    } else if (newPosition < oldPosition){
+                        if (module.position < oldPosition && module.position >= newPosition) {
+                            await module.update({position: module.position + 1});
+                        }
+                    }
+                })
+            }
+        }
     }
 }
