@@ -16,6 +16,7 @@ import { UserCourses } from "./courses/user-courses.model.dto";
 import { LearnModule } from "./learn-modules/learn-modules.model";
 import { LearnModulesModule } from "./learn-modules/learn-modules.module";
 import { LessonsModule } from './lessons/lesson.module';
+import { Lesson } from "./lessons/lesson.model";
 
 @Module({
     controllers: [],
@@ -31,7 +32,7 @@ import { LessonsModule } from './lessons/lesson.module';
           username: process.env.POSTGRES_USERNAME,
           password: process.env.POSTGRES_PASSWORD ,
           database: process.env.POSTGRES_DATABASE,
-          models: [User, Role, UserRoles, Course, UserCourses, LearnModule],
+          models: [User, Role, UserRoles, Course, UserCourses, LearnModule, Lesson],
           autoLoadModels: true
         }),
         ServeStaticModule.forRoot({
