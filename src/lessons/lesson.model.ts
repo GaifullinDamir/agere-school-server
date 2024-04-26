@@ -1,21 +1,21 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
-import { Course } from "src/courses/courses.model";
-import { Lesson } from "src/lessons/lesson.model";
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { LearnModule } from "src/learn-modules/learn-modules.model";
 
 
-interface LearnModuleCreationAttributes {
+interface LessonCreationAttributes {
     id: string;
     name: string;
     description: string;
     position: number;
-    courseId: string;
+    ytVideoRef: string;
+    moduleId: string;
 }
 
 @Table({
-    tableName: 'modules'
+    tableName: 'lessons'
 })
-export class LearnModule extends Model<LearnModule, LearnModuleCreationAttributes> {
+export class Lesson extends Model<Lesson, LessonCreationAttributes> {
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
     @Column({type: DataType.UUID, unique: true, primaryKey: true})
     id: string;
@@ -24,7 +24,7 @@ export class LearnModule extends Model<LearnModule, LearnModuleCreationAttribute
     @Column({type: DataType.STRING, allowNull: false})
     name: string;
 
-    @ApiProperty({example: {"descriptiom": "В данном модуле..."}, description: 'Описание модуля.'})
+    @ApiProperty({example: {"description": "В данном модуле..."}, description: 'Описание модуля.'})
     @Column({type: DataType.JSON})
     description: string;
 
@@ -32,14 +32,15 @@ export class LearnModule extends Model<LearnModule, LearnModuleCreationAttribute
     @Column({type: DataType.INTEGER})
     position: number;
 
+    @ApiProperty({example: 'https://www.youtube.com/embed/_raVsypTkPI', description: 'Ссылка на видео в YT.'})
+    @Column({type: DataType.STRING, allowNull: false})
+    ytVideoRef: string;
+
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
-    @ForeignKey(() => Course)
+    @ForeignKey(() => LearnModule)
     @Column({type: DataType.UUID})
-    courseId: string;
+    moduleId: string;
 
-    @BelongsTo(() => Course)
-    course: Course;
-
-    @HasMany(() => Lesson)
-    lessons: Lesson;
+    @BelongsTo(() => LearnModule)
+    module: LearnModule;
 }
