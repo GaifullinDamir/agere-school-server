@@ -40,4 +40,12 @@ export class LessonsService {
             } 
             throw new HttpException('Уроки не найдены.', HttpStatus.NOT_FOUND)
         }
+
+        async getById(lessonId: string) {
+            const lesson = await this.lessonRepository.findByPk(lessonId, {include: {all: true}});
+            if (lesson) {
+                return new ViewLessonDto(lesson);
+            }
+            throw new HttpException('Урок не найден.', HttpStatus.NOT_FOUND);
+        }
 }
