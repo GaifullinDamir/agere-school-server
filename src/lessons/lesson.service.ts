@@ -16,7 +16,7 @@ export class LessonsService {
         private parserService: ParsersService) {}
 
         async create(actor: any, moduleId: string, dto: CreateLessonDto): Promise<ViewLessonDto> {
-            const module = await this.learnModuleRepository.findByPk(moduleId);
+            const module = await this.learnModuleRepository.findByPk(moduleId, {include: {all: true}});
             const role = actor.roles.find(role => role.value === 'admin');
             if (module) {
                 if (module.course.userId === actor.id || role) {
@@ -59,7 +59,7 @@ export class LessonsService {
         async update(id: string, dto: UpdateLessonDto, actor: any): Promise<ViewLessonDto>{
             const lesson = await this.lessonRepository.findOne({where: {id}, include: {all: true}});
             if (lesson) {
-                const course = (await this.learnModuleRepository.findByPk(lesson.moduleId)).course;
+                const course = (await this.learnModuleRepository.findByPk(lesson.moduleId, {include: {all: true}})).course;
                 const role = actor.roles.find(role => role.value === 'admin');
                 if (course.userId === actor.id || role) {
                     let ytUrlId: string; 
@@ -81,7 +81,7 @@ export class LessonsService {
         async delete(id: string, actor: any) {
             const lesson = await this.lessonRepository.findOne({where: {id}, include: {all: true}});
             if (lesson) {
-                const course = (await this.learnModuleRepository.findByPk(lesson.moduleId)).course;
+                const course = (await this.learnModuleRepository.findByPk(lesson.moduleId, {include: {all: true}})).course;
                 const role = actor.roles.find(role => role.value === 'admin');
                 if (course.userId === actor.id || role) {
                     const message = await this.changePosition('delete', lesson.moduleId, lesson.position);
