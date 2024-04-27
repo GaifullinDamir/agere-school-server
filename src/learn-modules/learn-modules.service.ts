@@ -17,13 +17,13 @@ export class LearnModulesService {
     async create(actor: any, courseId: string, dto: CreateLearnModuleDto): Promise<LearnModule> {
         const course = await this.courseService.getById(courseId);
         if (course && course.userId === actor.id) {
-            
             const modules = await this.learnModuleRepository.findAll();
+            const sortedModules = modules.sort((m1, m2) => m1.position - m2.position);
             let position: number; 
-            if(!modules.length) {
+            if(!sortedModules.length) {
                 position = 0;
             } else {
-                position = modules.pop().position + 1;
+                position = sortedModules.pop().position + 1;
             }
             const id = uuidv1();
             const module = await this.learnModuleRepository.create({id, courseId, position, ...dto})

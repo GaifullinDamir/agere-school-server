@@ -17,6 +17,7 @@ import { LearnModule } from "./learn-modules/learn-modules.model";
 import { LearnModulesModule } from "./learn-modules/learn-modules.module";
 import { LessonsModule } from './lessons/lesson.module';
 import { Lesson } from "./lessons/lesson.model";
+import { ParsersModule } from "./common/utils/parsers/parsers.module";
 
 @Module({
     controllers: [],
@@ -44,7 +45,8 @@ import { Lesson } from "./lessons/lesson.model";
         CoursesModule,
         FilesModule,
         LearnModulesModule,
-        LessonsModule
+        LessonsModule,
+        ParsersModule
       ]
 })
 export class AppModule {

@@ -6,6 +6,7 @@ import { LearnModule } from 'src/learn-modules/learn-modules.model';
 import { Lesson } from './lesson.model';
 import { AuthModule } from 'src/auth/auth.module';
 import { LearnModulesModule } from 'src/learn-modules/learn-modules.module';
+import { ParsersModule } from 'src/common/utils/parsers/parsers.module';
 
 @Module({
   controllers: [LessonsController],
@@ -13,7 +14,8 @@ import { LearnModulesModule } from 'src/learn-modules/learn-modules.module';
   imports: [
     SequelizeModule.forFeature([LearnModule, Lesson]),
     AuthModule,
-    LearnModulesModule
+    LearnModulesModule,
+    ParsersModule
   ],
   exports: [LessonsService]
 })

@@ -12,22 +12,24 @@ import { UpdateLessonDto } from './dto/update-lesson.dto';
 export class LessonsService {
     constructor(@InjectModel(LearnModule) private learnModuleRepository: typeof LearnModule,
         @InjectModel(Lesson) private lessonRepository: typeof Lesson,
-        private learnModuleService: LearnModulesService) {}
+        ) {}
 
-        async create(actor: any, moduleId: string, dto: CreateLessonDto): Promise<Lesson> {
-            const module = await this.learnModuleService.getById(moduleId);
+        async create(actor: any, moduleId: string, dto: CreateLessonDto): Promise<ViewLessonDto> {
+            const module = await this.learnModuleRepository.findByPk(moduleId);
             const role = actor.roles.find(role => role.value === 'admin');
             if (module) {
                 if (module.course.userId === actor.id || role) {
                     const lessons = await this.lessonRepository.findAll();
+                    const sortedLessons = lessons.sort((l1, l2) => l1.position - l2.position);
                     let position: number;
-                    if (!lessons.length) {
+                    if (!sortedLessons.length) {
                         position = 0;
                     } else {
-                        position = lessons.pop().position + 1;
+                        position = sortedLessons.pop().position + 1;
                     }
                     const id = uuidv1();
-                    return await this.lessonRepository.create({id, moduleId, position, ...dto});
+                    const lesson = await this.lessonRepository.create({id, moduleId, position, ...dto});
+                    return new ViewLessonDto(lesson);
                 }
                 throw new HttpException('Данный модуль не достпуен этому пользователю.', HttpStatus.FORBIDDEN);
             }
@@ -50,15 +52,16 @@ export class LessonsService {
             throw new HttpException('Урок не найден.', HttpStatus.NOT_FOUND);
         }
 
-        async update(id: string, dto: UpdateLessonDto, actor: any){
+        async update(id: string, dto: UpdateLessonDto, actor: any): Promise<ViewLessonDto>{
             const lesson = await this.lessonRepository.findOne({where: {id}, include: {all: true}});
             if (lesson) {
-                const course = (await this.learnModuleService.getById(lesson.moduleId)).course;
+                const course = (await this.learnModuleRepository.findByPk(lesson.moduleId)).course;
                 const role = actor.roles.find(role => role.value === 'admin');
                 if (course.userId === actor.id || role) {
                     const message = await this.changePosition('update', lesson.moduleId, lesson.position, dto.position);
                     if (message) throw new HttpException(message, HttpStatus.BAD_REQUEST);
-                    return await lesson.update({...dto});
+                    const result = await lesson.update({...dto});
+                    return new ViewLessonDto(result);
                 }
                 throw new HttpException('Нет доступа к уроку.', HttpStatus.FORBIDDEN);
             }
@@ -69,7 +72,7 @@ export class LessonsService {
         async delete(id: string, actor: any) {
             const lesson = await this.lessonRepository.findOne({where: {id}, include: {all: true}});
             if (lesson) {
-                const course = (await this.learnModuleService.getById(lesson.moduleId)).course;
+                const course = (await this.learnModuleRepository.findByPk(lesson.moduleId)).course;
                 const role = actor.roles.find(role => role.value === 'admin');
                 if (course.userId === actor.id || role) {
                     const message = await this.changePosition('delete', lesson.moduleId, lesson.position);
