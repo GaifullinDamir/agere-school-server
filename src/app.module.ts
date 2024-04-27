@@ -18,6 +18,8 @@ import { LearnModulesModule } from "./learn-modules/learn-modules.module";
 import { LessonsModule } from './lessons/lesson.module';
 import { Lesson } from "./lessons/lesson.model";
 import { ParsersModule } from "./common/utils/parsers/parsers.module";
+import { TasksModule } from './tasks/tasks.module';
+import { Task } from "./tasks/tasks.model";
 
 @Module({
     controllers: [],
@@ -33,7 +35,7 @@ import { ParsersModule } from "./common/utils/parsers/parsers.module";
           username: process.env.POSTGRES_USERNAME,
           password: process.env.POSTGRES_PASSWORD ,
           database: process.env.POSTGRES_DATABASE,
-          models: [User, Role, UserRoles, Course, UserCourses, LearnModule, Lesson],
+          models: [User, Role, UserRoles, Course, UserCourses, LearnModule, Lesson, Task],
           autoLoadModels: true
         }),
         ServeStaticModule.forRoot({
@@ -46,7 +48,8 @@ import { ParsersModule } from "./common/utils/parsers/parsers.module";
         FilesModule,
         LearnModulesModule,
         LessonsModule,
-        ParsersModule
+        ParsersModule,
+        TasksModule
       ]
 })
 export class AppModule {

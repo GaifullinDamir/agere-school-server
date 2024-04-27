@@ -2,6 +2,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Lesson } from "../lesson.model";
 import { ViewLearnModuleDto } from "src/learn-modules/dto/view-learn-module.dto";
+import { ViewTaskDto } from "src/tasks/dto/view-task.dto";
 
 export class ViewLessonDto {
     constructor(lesson: Lesson) {
@@ -13,6 +14,10 @@ export class ViewLessonDto {
         this.moduleId =  lesson.moduleId;
         if (lesson.module) {
             this.module = new ViewLearnModuleDto(lesson.module);
+        }
+
+        if (lesson.tasks) {
+            this.tasks = lesson.tasks.map(task => new ViewTaskDto(task));
         }
     }
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
@@ -52,4 +57,6 @@ export class ViewLessonDto {
         }
         ], description: 'Модуль в котором содержится урок.'})
     readonly module: ViewLearnModuleDto;
+
+    readonly tasks: ViewTaskDto[];
 }

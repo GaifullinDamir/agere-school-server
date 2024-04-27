@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { LearnModule } from "src/learn-modules/learn-modules.model";
+import { Task } from "src/tasks/tasks.model";
 
 
 interface LessonCreationAttributes {
@@ -20,15 +21,15 @@ export class Lesson extends Model<Lesson, LessonCreationAttributes> {
     @Column({type: DataType.UUID, unique: true, primaryKey: true})
     id: string;
 
-    @ApiProperty({example: 'Имя модуля.', description: 'Имя модуля.'})
+    @ApiProperty({example: 'Имя урока.', description: 'Имя урока.'})
     @Column({type: DataType.STRING, allowNull: false})
     name: string;
 
-    @ApiProperty({example: {"description": "В данном модуле..."}, description: 'Описание модуля.'})
+    @ApiProperty({example: {"description": "В данном уроке..."}, description: 'Описание модуля.'})
     @Column({type: DataType.JSON})
     description: string;
 
-    @ApiProperty({example: 0, description: 'Порядковый номер модуля.'})
+    @ApiProperty({example: 0, description: 'Порядковый номер урока.'})
     @Column({type: DataType.INTEGER})
     position: number;
 
@@ -43,4 +44,7 @@ export class Lesson extends Model<Lesson, LessonCreationAttributes> {
 
     @BelongsTo(() => LearnModule)
     module: LearnModule;
+
+    @HasMany(() => Task)
+    tasks: Task[];
 }
