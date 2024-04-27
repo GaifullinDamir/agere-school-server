@@ -7,18 +7,22 @@ import { CreateLessonDto } from './dto/create-lesson.dto';
 import { LearnModulesService } from 'src/learn-modules/learn-modules.service';
 import { ViewLessonDto } from './dto/view-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
+import { ParsersService } from 'src/common/utils/parsers/parsers.service';
 
 @Injectable()
 export class LessonsService {
     constructor(@InjectModel(LearnModule) private learnModuleRepository: typeof LearnModule,
         @InjectModel(Lesson) private lessonRepository: typeof Lesson,
-        ) {}
+        private parserService: ParsersService) {}
 
         async create(actor: any, moduleId: string, dto: CreateLessonDto): Promise<ViewLessonDto> {
             const module = await this.learnModuleRepository.findByPk(moduleId);
             const role = actor.roles.find(role => role.value === 'admin');
             if (module) {
                 if (module.course.userId === actor.id || role) {
+                    const ytUrlId = this.parserService.parseYouTubeUrlToId(dto.ytVideoRef);
+                    if (ytUrlId === '') throw new HttpException('Некорректная ссылка на видео YouTube.', HttpStatus.BAD_REQUEST);
+
                     const lessons = await this.lessonRepository.findAll();
                     const sortedLessons = lessons.sort((l1, l2) => l1.position - l2.position);
                     let position: number;
@@ -28,7 +32,7 @@ export class LessonsService {
                         position = sortedLessons.pop().position + 1;
                     }
                     const id = uuidv1();
-                    const lesson = await this.lessonRepository.create({id, moduleId, position, ...dto});
+                    const lesson = await this.lessonRepository.create({...dto, id, moduleId, position, ytVideoRef: ytUrlId});
                     return new ViewLessonDto(lesson);
                 }
                 throw new HttpException('Данный модуль не достпуен этому пользователю.', HttpStatus.FORBIDDEN);
@@ -58,9 +62,14 @@ export class LessonsService {
                 const course = (await this.learnModuleRepository.findByPk(lesson.moduleId)).course;
                 const role = actor.roles.find(role => role.value === 'admin');
                 if (course.userId === actor.id || role) {
+                    let ytUrlId: string; 
+                    if (dto.ytVideoRef) {
+                        ytUrlId = this.parserService.parseYouTubeUrlToId(dto.ytVideoRef);
+                        if (ytUrlId === '') throw new HttpException('Некорректная ссылка на видео YouTube.', HttpStatus.BAD_REQUEST);
+                    }
                     const message = await this.changePosition('update', lesson.moduleId, lesson.position, dto.position);
                     if (message) throw new HttpException(message, HttpStatus.BAD_REQUEST);
-                    const result = await lesson.update({...dto});
+                    const result = await lesson.update({...dto, ytVideoRef: ytUrlId});
                     return new ViewLessonDto(result);
                 }
                 throw new HttpException('Нет доступа к уроку.', HttpStatus.FORBIDDEN);
