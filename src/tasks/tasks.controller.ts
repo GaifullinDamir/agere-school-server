@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TasksService } from './tasks.service';
 import { Task } from './tasks.model';
@@ -20,5 +20,12 @@ export class TasksController {
     @Post('/:lessonId')
     createTask(@GetUser() actor: any, @Param('lessonId') moduleId: string, @Body() dto: CreateTaskDto) {
         return this.taskService.create(actor, moduleId, dto);
+    }
+
+    @ApiOperation({summary: 'Получить все задачи урока.'})
+    @ApiResponse({status: 200, type: [Task]})
+    @Get('lessons/:lessonId')
+    getAllModules(@Param('lessonId') lessonId: string) {
+        return this.taskService.getAll(lessonId);
     }
 }
