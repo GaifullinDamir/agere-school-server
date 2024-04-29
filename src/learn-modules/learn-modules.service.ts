@@ -17,7 +17,7 @@ export class LearnModulesService {
     async create(actor: any, courseId: string, dto: CreateLearnModuleDto): Promise<LearnModule> {
         const course = await this.courseService.getById(courseId);
         if (course && course.userId === actor.id) {
-            const modules = await this.learnModuleRepository.findAll();
+            const modules = await this.learnModuleRepository.findAll({where:{courseId}});
             const sortedModules = modules.sort((m1, m2) => m1.position - m2.position);
             let position: number; 
             if(!sortedModules.length) {

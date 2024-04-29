@@ -4,7 +4,6 @@ import { LearnModule } from 'src/learn-modules/learn-modules.model';
 import { v1 as uuidv1 } from 'uuid';
 import { Lesson } from './lesson.model';
 import { CreateLessonDto } from './dto/create-lesson.dto';
-import { LearnModulesService } from 'src/learn-modules/learn-modules.service';
 import { ViewLessonDto } from './dto/view-lesson.dto';
 import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { ParsersService } from 'src/common/utils/parsers/parsers.service';
@@ -23,7 +22,7 @@ export class LessonsService {
                     const ytUrlId = this.parserService.parseYouTubeUrlToId(dto.ytVideoRef);
                     if (ytUrlId === '') throw new HttpException('Некорректная ссылка на видео YouTube.', HttpStatus.BAD_REQUEST);
 
-                    const lessons = await this.lessonRepository.findAll();
+                    const lessons = await this.lessonRepository.findAll({where: {moduleId}});
                     const sortedLessons = lessons.sort((l1, l2) => l1.position - l2.position);
                     let position: number;
                     if (!sortedLessons.length) {
