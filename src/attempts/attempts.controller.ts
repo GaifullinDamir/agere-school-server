@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AttemptsService } from './attempts.service';
 import { Attempt } from './attempts.model';
@@ -20,5 +20,14 @@ export class AttemptsController {
     @Post('/:taskId')
     createAttempt(@GetUser() actor: any, @Param('taskId') taskId: string, @Body() dto: CreateAttemptDto) {
         return this.attemptService.create(actor, taskId, dto);
+    }
+
+    @ApiOperation({summary: 'Получить попытку по id задачи.'})
+    @ApiResponse({status: 200, type: Attempt})
+    @Roles('admin', 'user')
+    @UseGuards(RolesGuard)
+    @Get('/:taskId')
+    getAttemptByTeskId(@GetUser() actor: any, @Param('taskId') taskId: string) {
+        return this.attemptService.getByTaskId(actor, taskId);
     }
 }

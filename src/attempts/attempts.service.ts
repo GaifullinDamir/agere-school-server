@@ -35,4 +35,15 @@ export class AttemptsService {
         }
         throw new HttpException("Задача не найдена.", HttpStatus.NOT_FOUND);
     }
+
+    async getByTaskId(actor: any, taskId: string): Promise<ViewAttemptDto> {
+        const attempt = await this.attemptRepository.findOne({where: {
+            userId: actor.id,
+            taskId
+        }});
+        if (attempt) {
+            return new ViewAttemptDto(attempt);
+        }
+        throw new HttpException('Попытка не найдена.', HttpStatus.NOT_FOUND);
+    }
 }

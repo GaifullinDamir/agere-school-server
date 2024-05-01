@@ -7,6 +7,6 @@ export class CreateAttemptDto {
     readonly answer: string;
 
     @ApiProperty({example: true, description: 'Правильность ответа.'})
-    @IsBoolean({message: 'isRight-должен быть JSON-файл.'})
+    @IsBoolean({message: 'isRight-должен быть boolean.'})
     readonly isRight: boolean;
 }
