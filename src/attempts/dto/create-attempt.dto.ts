@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsBoolean, IsString } from "class-validator";
+import { IsBoolean, IsJSON, IsString } from "class-validator";
 
 export class CreateAttemptDto {
     @ApiProperty({example: {"answer": "В данной задаче..."}, description: 'Тело ответа.'})
-    @IsString({message: 'answer-должен быть JSON-файл.'})
+    @IsJSON({message: 'answer-должен быть JSON-файл.'})
     readonly answer: string;
 
     @ApiProperty({example: true, description: 'Правильность ответа.'})

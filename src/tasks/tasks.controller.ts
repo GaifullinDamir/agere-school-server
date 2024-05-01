@@ -19,8 +19,8 @@ export class TasksController {
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
     @Post('/:lessonId')
-    createTask(@GetUser() actor: any, @Param('lessonId') moduleId: string, @Body() dto: CreateTaskDto) {
-        return this.taskService.create(actor, moduleId, dto);
+    createTask(@GetUser() actor: any, @Param('lessonId') lessonId: string, @Body() dto: CreateTaskDto) {
+        return this.taskService.create(actor, lessonId, dto);
     }
 
     @ApiOperation({summary: 'Получить все задачи урока.'})

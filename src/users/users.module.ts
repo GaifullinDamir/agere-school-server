@@ -23,7 +23,7 @@ import { AttemptsModule } from 'src/attempts/attempts.module';
     FilesModule,
     forwardRef(() => AuthModule),
     forwardRef(() => CoursesModule),
-    AttemptsModule
+    forwardRef(() => AttemptsModule)
   ],
   exports: [
     UsersService, 

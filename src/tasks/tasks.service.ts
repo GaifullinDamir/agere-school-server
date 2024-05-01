@@ -20,7 +20,6 @@ export class TasksService {
         const lesson = await this.lessonRepository.findByPk(lessonId, {include: {all: true}});
         if (lesson) {
             const role = actor.roles.find(role => role.value === 'admin');
-            // console.log(lesson.module)
             const course = await this.courseRepository.findByPk(lesson.module.courseId, {include: {all: true}});
             if (course.userId === actor.id || role) {
                 const tasks = await this.taskRepository.findAll({where:{lessonId}});

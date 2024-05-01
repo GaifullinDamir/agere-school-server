@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { TasksController } from './tasks.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -22,7 +22,7 @@ import { AttemptsModule } from 'src/attempts/attempts.module';
     LessonsModule,
     CoursesModule,
     LearnModulesModule,
-    AttemptsModule
+    forwardRef(() => AttemptsModule)
   ],
   exports: [TasksService]
 })
