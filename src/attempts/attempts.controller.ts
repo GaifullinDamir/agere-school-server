@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AttemptsService } from './attempts.service';
 import { Attempt } from './attempts.model';
@@ -6,6 +6,7 @@ import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { CreateAttemptDto } from './dto/create-attempt.dto';
+import { UpdateAttemptDto } from './dto/update-attempt.dto';
 
 @ApiTags('Попытки')
 @Controller('attempts')
@@ -27,7 +28,17 @@ export class AttemptsController {
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @Get('/:taskId')
-    getAttemptByTeskId(@GetUser() actor: any, @Param('taskId') taskId: string) {
+    getAttempt(@GetUser() actor: any, @Param('taskId') taskId: string) {
         return this.attemptService.getByTaskId(actor, taskId);
+    }
+
+    @ApiOperation({summary: 'Изменить попытку по id задачи.'})
+    @ApiResponse({status: 200, type: Attempt})
+    @Roles('admin', 'user')
+    @UseGuards(RolesGuard)
+    @UsePipes(ValidationPipe)
+    @Put('/:taskId')
+    updateAttempt(@GetUser() actor: any, @Param('taskId') taskId: string, dto: UpdateAttemptDto) {
+        return this.attemptService.update(actor, taskId, dto);
     }
 }

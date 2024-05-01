@@ -8,6 +8,7 @@ import { ViewAttemptDto } from './dto/view-attempt.dto';
 import { UserCourses } from 'src/courses/user-courses.model.dto';
 import { Course } from 'src/courses/courses.model';
 import { LearnModule } from 'src/learn-modules/learn-modules.model';
+import { UpdateAttemptDto } from './dto/update-attempt.dto';
 
 @Injectable()
 export class AttemptsService {
@@ -45,5 +46,29 @@ export class AttemptsService {
             return new ViewAttemptDto(attempt);
         }
         throw new HttpException('Попытка не найдена.', HttpStatus.NOT_FOUND);
+    }
+
+    async update(actor: any, taskId: string, dto: UpdateAttemptDto) {
+        const task = await this.taskRepository.findByPk(taskId, {include: {all: true}});
+        if (task) {
+            const module = await this.learnModuleRepository.findByPk(task.lesson.moduleId, {include: {all: true}});
+            const course = module.course;
+            const userCourseInfo = await this.userCoursesRepository.findAll({where: {
+                userId: actor.id,
+                courseId: course.id
+            }});
+            if (userCourseInfo) {
+                const attempt = await this.attemptRepository.findOne({where: {
+                    userId: actor.id,
+                    taskId
+                }})
+                if (attempt) {
+                    return new ViewAttemptDto(await attempt.update({...dto}));
+                }
+                throw new HttpException('Попытка не найдена', HttpStatus.NOT_FOUND);
+            }
+            throw new HttpException('Данный пользователь не имеет доступа к прохождению данного курса.', HttpStatus.FORBIDDEN);
+        }
+        throw new HttpException("Задача не найдена.", HttpStatus.NOT_FOUND);
     }
 }
