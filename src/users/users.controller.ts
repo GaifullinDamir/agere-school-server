@@ -91,7 +91,7 @@ export class UsersController {
         return this.usersService.pickupRole(id, dto);
     }
 
-    @ApiOperation({summary: 'Забрать роль.'})
+    @ApiOperation({summary: 'Подписаться на курс.'})
     @ApiResponse({status: 200})
     @Roles('user')
     @UseGuards(RolesGuard)

@@ -10,16 +10,19 @@ import { CoursesModule } from 'src/courses/courses.module';
 import { LearnModulesModule } from 'src/learn-modules/learn-modules.module';
 import { Course } from 'src/courses/courses.model';
 import { LearnModule } from 'src/learn-modules/learn-modules.model';
+import { Attempt } from 'src/attempts/attempts.model';
+import { AttemptsModule } from 'src/attempts/attempts.module';
 
 @Module({
   providers: [TasksService],
   controllers: [TasksController],
   imports: [
-    SequelizeModule.forFeature([Lesson, Task, Course, LearnModule]),
+    SequelizeModule.forFeature([Lesson, Task, Course, LearnModule, Attempt]),
     AuthModule,
     LessonsModule,
     CoursesModule,
-    LearnModulesModule
+    LearnModulesModule,
+    AttemptsModule
   ],
   exports: [TasksService]
 })

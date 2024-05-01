@@ -100,9 +100,7 @@ export class UsersService {
 
     async subscribeToCourse(courseId: string, actorId: string) {
         const user = await this.userRepository.findByPk(actorId);
-        // console.log(user);
         const course = await this.coursesService.getById(courseId);
-        // console.log(course);
         if (course && user) {
             console.log(course)
             return await user.$add('studentCourses', course.id);

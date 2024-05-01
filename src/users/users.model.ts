@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { BelongsToMany, Column, DataType, HasMany, Model, Table } from "sequelize-typescript";
+import { Attempt } from "src/attempts/attempts.model";
 import { Course } from "src/courses/courses.model";
 import { UserCourses } from "src/courses/user-courses.model.dto";
 import { Role } from "src/roles/roles.model";
@@ -12,7 +13,6 @@ interface UserCreationAttributes {
     patronimic: string;
     email: string;
     password: string;
-    role: string;
 }
 
 @Table({
@@ -55,4 +55,7 @@ export class User extends Model<User, UserCreationAttributes> {
 
     @HasMany(() => Course)
     courses: Course[];
+
+    @HasMany(() => Attempt)
+    attempts: Attempt[];
 }
