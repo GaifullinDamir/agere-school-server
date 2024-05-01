@@ -29,8 +29,15 @@ export class AttemptsService {
             }});
             if (userCourseInfo) {
                 const id = uuidv1();
-                const attempt = await this.attemptRepository.create({...dto, id, userId: actor.id, taskId});
-                return new ViewAttemptDto(attempt);
+                const attempt - await this.attemptRepository.findOne({where: {
+                    userId: actor.id,
+                    taskId
+                }});
+                if (attempt) {
+                    throw new HttpException('Такая попытка уже есть.', HttpStatus.BAD_REQUEST);
+                }
+                const newAttempt = await this.attemptRepository.create({...dto, id, userId: actor.id, taskId});
+                return new ViewAttemptDto(newAttempt);
             }
             throw new HttpException('Данный пользователь не имеет доступа к прохождению данного курса.', HttpStatus.FORBIDDEN);
         }
