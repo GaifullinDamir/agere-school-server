@@ -2,7 +2,6 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from './users.model';
 import { InjectModel } from '@nestjs/sequelize';
 import { CreateUserDto } from './dto/create-user.dto';
-import { RolesService } from 'src/roles/roles.service';
 import { AddRoleDto } from './dto/add-role.dto';
 import { v1 as uuidv1} from 'uuid';
 import { FilesService } from 'src/files/files.service';
@@ -10,17 +9,16 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { ViewUserDto } from './dto/view-user.dto';
 import { PickupRoleDto } from './dto/pickup-role.dto';
-import { CoursesService } from 'src/courses/courses.service';
 import { Role } from 'src/roles/roles.model';
+import { Course } from 'src/courses/courses.model';
 
 @Injectable()
 export class UsersService {
 
     constructor(@InjectModel(User) private userRepository: typeof User,
-        private rolesService: RolesService,
         private filesService: FilesService,
-        private coursesService: CoursesService,
-        @InjectModel(Role) private roleRepository: typeof Role) {
+        @InjectModel(Role) private roleRepository: typeof Role,
+        @InjectModel(Course) private courseRepository: typeof Course) {
     }
     async create(dto: CreateUserDto) : Promise<ViewUserDto>{
         const id = uuidv1();
@@ -84,7 +82,10 @@ export class UsersService {
 
     async addRole(userId: string, dto: AddRoleDto): Promise<AddRoleDto> {
         const user = await this.userRepository.findByPk(userId);
-        const role = await this.rolesService.getByValue(dto.value);
+        const role = await this.roleRepository.findOne({
+            where: {value: 'user'},
+            include: {all: true}
+        });
         if (role && user) {
             await user.$add('roles', role.id);
             return dto;
@@ -94,7 +95,10 @@ export class UsersService {
 
     async pickupRole(id: string, dto: PickupRoleDto): Promise<PickupRoleDto> {
         const user = await this.userRepository.findByPk(id);
-        const role = await this.rolesService.getByValue(dto.value);
+        const role = await this.roleRepository.findOne({
+            where: {value: 'user'},
+            include: {all: true}
+        });
         if (role && user) {
 
             await user.$remove('roles', role.id);
@@ -105,11 +109,12 @@ export class UsersService {
 
     async subscribeToCourse(courseId: string, actorId: string) {
         const user = await this.userRepository.findByPk(actorId);
-        const course = await this.coursesService.getById(courseId);
+        const course = await this.courseRepository.findOne({
+            where: {id: courseId},
+            include: [{all: true}]
+        });
         if (course && user) {
-            console.log(course)
             return await user.$add('studentCourses', course.id);
-            
         }
         throw new HttpException('Пользователь или курс не найдены.', HttpStatus.NOT_FOUND);
     }
