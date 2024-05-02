@@ -5,18 +5,24 @@ import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs';
 import { User } from 'src/users/users.model';
 import { ViewUserDto } from 'src/users/dto/view-user.dto';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class AuthService {
     constructor(private userService: UsersService,
-                private jwtService: JwtService) {}
+        private jwtService: JwtService,
+        @InjectModel(User) private userRepository: typeof User) {}
+        
     async login(userDto: CreateUserDto) {
         const user = await this.validateUser(userDto);
         return this.generateToken(user);
     }
 
     async registration(userDto: CreateUserDto) {
-        const condidate = await this.userService.getByEmail(userDto.email);
+        const condidate = await this.userRepository.findOne({
+            where:{email: userDto.email},
+            include: {all: true}
+        });
         if (condidate) {
             throw new HttpException('Пользователь с таким email существует.', HttpStatus.BAD_REQUEST);
         }

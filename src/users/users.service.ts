@@ -39,7 +39,10 @@ export class UsersService {
         const users = await this.userRepository.findAll({
             include: {all: true}
         });
-        return users.map(user => new ViewUserDto(user))
+        if (users.length) {
+            return users.map(user => new ViewUserDto(user));
+        }
+        return [];
     }
 
     async getByEmail(email: string) : Promise<ViewUserDto>{
@@ -50,11 +53,15 @@ export class UsersService {
         if (user) {
             return new ViewUserDto(user);
         }
+        throw new HttpException('Пользователь не найден.', HttpStatus.NOT_FOUND);
     }
 
     async getById(id: string): Promise<ViewUserDto> {
         const user = await this.userRepository.findOne({where: {id}, include: {all: true}});
-        return new ViewUserDto(user);
+        if (user) {
+            return new ViewUserDto(user);
+        }
+        throw new HttpException('Пользователь не найден.', HttpStatus.NOT_FOUND);
     }
 
     async update(id: string, dto: UpdateUserDto, actor: any, file?: Express.Multer.File): Promise<Number[]> {

@@ -78,5 +78,16 @@ export class ViewUserDto {
     ], description: 'Курсы пользователя.'})
     readonly courses: ViewCourseDto[];
 
+    @ApiProperty({example: {"id": "815a9500-085e-11ef-96b8-6b6f16490477",
+    "text": "Урок очень интересный. Спасибо!",
+    "lessonId": "fbff9140-04b0-11ef-b569-47fd305d5520",
+    "lesson": {
+        "id": "fbff9140-04b0-11ef-b569-47fd305d5520",
+        "name": "5",
+        "description": "{\"description\":\"message\"}",
+        "position": 0,
+        "ytVideoRef": "tqipC5TXSz8",
+        "moduleId": "7397fd70-03fb-11ef-ba10-458326fa9ca9"
+    }}, description: 'Сообщение пользователя.'})
     readonly messages: ViewMessageDto[];
 }
