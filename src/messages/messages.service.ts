@@ -85,4 +85,25 @@ export class MessagesService {
         }
         throw new HttpException('Сообщение не найдено', HttpStatus.NOT_FOUND);
     }
+
+    async delete(actor: any, messageId: string) {
+        const message = await this.messageRepository.findByPk(messageId, {include: {all: true}});
+        if (message) {
+            const lesson = await this.lessonRepository.findByPk(message.lessonId, {include: {all: true}});
+            if (lesson) {
+                const userCourseInfo = await this.userCourseRepository.findOne({where: {
+                    userId: actor.id,
+                    courseId: lesson.module.courseId
+                }})
+                const role = actor.roles.find(role => role.value === 'admin');
+                if (userCourseInfo || role) {
+                    return await message.destroy();
+
+                }
+                throw new HttpException('Пользователь не подписан на курс.', HttpStatus.FORBIDDEN);
+            }
+            throw new HttpException('Урок не найден.', HttpStatus.NOT_FOUND);
+        }
+        throw new HttpException('Сообщение не найдено', HttpStatus.NOT_FOUND);
+    }
 }

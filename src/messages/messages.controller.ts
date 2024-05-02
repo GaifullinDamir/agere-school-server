@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MessagesService } from './messages.service';
 import { Message } from './messages.model';
@@ -38,8 +38,17 @@ export class MessagesController {
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
-    @Put(':messageId')
+    @Put('/:messageId')
     updateMessage(@GetUser() actor: any, @Param('messageId') messageId: string, @Body() dto: UpdateMessageDto) {
         return this.messageService.update(actor, messageId, dto);
+    }
+
+    @ApiOperation({summary: 'Удалить сообщение.'})
+    @ApiResponse({status: 200})
+    @Roles('admin', 'user')
+    @UseGuards(RolesGuard)
+    @Delete('/:messageId')
+    deleteMessage(@GetUser() actor: any, @Param('messageId') messageId: string,) {
+        return this.messageService.delete(actor, messageId);
     }
 }
