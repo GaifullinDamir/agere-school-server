@@ -12,8 +12,10 @@ export class RolesService {
 
     async create(dto: CreateRoleDto): Promise<ViewRoleDto> {
         const id = uuidv1();
-        const role = await this.getByValue(dto.value);
-        console.log(role);
+        const role = await this.roleRepository.findOne({
+            where: {value: dto.value},
+            include: {all: true}
+        });
         if (!role) {
             const newRole = await this.roleRepository.create({...dto, id});
             return new ViewRoleDto(newRole);
@@ -25,10 +27,10 @@ export class RolesService {
         let roles = await this.roleRepository.findAll({
             include: {all: true}
         });
-        if (!roles) {
-            roles = [];
+        if (roles.length) {
+            return roles.map(role => new ViewRoleDto(role));
         }
-        return roles.map(role => new ViewRoleDto(role));
+        return [];
     }
 
     async getByValue(value: string): Promise<ViewRoleDto>{

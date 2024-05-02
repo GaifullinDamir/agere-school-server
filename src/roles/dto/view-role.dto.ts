@@ -21,5 +21,5 @@ export class ViewRoleDto  {
     readonly description: string;
 
     @ApiProperty({example: 'Пользователя', description: 'Пользователи.'})
-    users: ViewUserDto[];
+    readonly users: ViewUserDto[];
 }

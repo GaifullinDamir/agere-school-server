@@ -12,7 +12,7 @@ import { AuthModule } from 'src/auth/auth.module';
   controllers: [RolesController],
   imports: [
     SequelizeModule.forFeature([Role, User, UserRoles]),
-    forwardRef(() => AuthModule)
+    AuthModule
   ],
   exports: [RolesService]
 })
