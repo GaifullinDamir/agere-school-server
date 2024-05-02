@@ -4,7 +4,7 @@ import { ViewUserDto } from "src/users/dto/view-user.dto";
 import { ApiProperty } from "@nestjs/swagger";
 
 export class ViewMessageDto {
-    constructor(private message: Message) {
+    constructor(message: Message) {
         this.id = message.id;
         this.text = message.text;
         this.lessonId = message.lessonId;

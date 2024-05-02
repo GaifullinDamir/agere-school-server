@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MessagesService } from './messages.service';
 import { Message } from './messages.model';
@@ -22,4 +22,13 @@ export class MessagesController {
         return this.messageService.create(actor, lessonId, dto);
     }
 
+    @ApiOperation({summary: 'Получить все сообщения урока.'})
+    @ApiResponse({status: 200, type: [Message]})
+    @Roles('user')
+    @UseGuards(RolesGuard)
+    @UsePipes(ValidationPipe)
+    @Get('/:lessonId')
+    getAllMessages(@GetUser() actor: any, @Param('lessonId') lessonId: string) {
+        return this.messageService.getAll(actor, lessonId);
+    }
 }

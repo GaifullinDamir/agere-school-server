@@ -32,4 +32,26 @@ export class MessagesService {
         }
         throw new HttpException('Урок не найден.', HttpStatus.NOT_FOUND);
     }
+
+    async getAll(actor: any, lessonId: string): Promise<ViewMessageDto[]> {
+        const lesson = await this.lessonRepository.findByPk(lessonId, {include: {all: true}});
+        if (lesson) {
+            const userCourseInfo = await this.userCourseRepository.findOne({where: {
+                userId: actor.id,
+                courseId: lesson.module.courseId
+            }})
+            if (userCourseInfo) {
+                const messages = await this.messageRepository.findAll({where: {
+                    userId: actor.id,
+                    lessonId
+                }});
+                if (messages.length) {
+                    return messages.map(message => new ViewMessageDto(message));
+                }
+                return [];
+            }
+            throw new HttpException('Пользователь не подписан на курс.', HttpStatus.FORBIDDEN);
+        }
+        throw new HttpException('Урок не найден.', HttpStatus.NOT_FOUND);
+    }
 }
