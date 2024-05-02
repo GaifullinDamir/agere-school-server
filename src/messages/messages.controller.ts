@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MessagesService } from './messages.service';
 import { Message } from './messages.model';
@@ -6,6 +6,7 @@ import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { CreateMessageDto } from './dto/create-message.dto';
+import { UpdateMessageDto } from './dto/update-message.dto';
 
 @ApiTags('Сообщения')
 @Controller('messages')
@@ -30,5 +31,15 @@ export class MessagesController {
     @Get('/:lessonId')
     getAllMessages(@GetUser() actor: any, @Param('lessonId') lessonId: string) {
         return this.messageService.getAll(actor, lessonId);
+    }
+
+    @ApiOperation({summary: 'Изменить сообщение.'})
+    @ApiResponse({status: 200, type: Message})
+    @Roles('admin', 'user')
+    @UseGuards(RolesGuard)
+    @UsePipes(ValidationPipe)
+    @Put(':messageId')
+    updateMessage(@GetUser() actor: any, @Param('messageId') messageId: string, @Body() dto: UpdateMessageDto) {
+        return this.messageService.update(actor, messageId, dto);
     }
 }

@@ -5,7 +5,7 @@ import { ViewCourseDto } from "src/courses/dto/view-course.dto";
 import { ViewMessageDto } from "src/messages/dto/view-message.dto";
 
 export class ViewUserDto {
-    constructor(private user: User) {
+    constructor(user: User) {
         this.id = user.id;
         this.name = user.name;
         this.surname = user.surname;
