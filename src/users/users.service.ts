@@ -11,6 +11,7 @@ import * as bcrypt from 'bcryptjs';
 import { ViewUserDto } from './dto/view-user.dto';
 import { PickupRoleDto } from './dto/pickup-role.dto';
 import { CoursesService } from 'src/courses/courses.service';
+import { Role } from 'src/roles/roles.model';
 
 @Injectable()
 export class UsersService {
@@ -18,15 +19,22 @@ export class UsersService {
     constructor(@InjectModel(User) private userRepository: typeof User,
         private rolesService: RolesService,
         private filesService: FilesService,
-        private coursesService: CoursesService) {
+        private coursesService: CoursesService,
+        @InjectModel(Role) private roleRepository: typeof Role) {
     }
     async create(dto: CreateUserDto) : Promise<ViewUserDto>{
         const id = uuidv1();
         const user = await this.userRepository.create({...dto, id});
-        const role = await this.rolesService.getByValue("user");
-        await user.$set('roles', [role.id]);
-        const updatedUser = await this.userRepository.findOne({where: {id}, include: {all: true}}); 
-        return new ViewUserDto(updatedUser);
+        const role = await this.roleRepository.findOne({
+            where: {value: 'user'},
+            include: {all: true}
+        });
+        if (role) {
+            await user.$set('roles', [role.id]);
+            const updatedUser = await this.userRepository.findOne({where: {id}, include: {all: true}}); 
+            return new ViewUserDto(updatedUser);
+        }
+        throw new HttpException('Роль не найдена', HttpStatus.NOT_FOUND);
     }
 
     async getAll(): Promise<ViewUserDto[]>{
@@ -41,12 +49,9 @@ export class UsersService {
             where:{email},
             include: {all: true}
         });
-        // console.log(user);
         if (user) {
             return new ViewUserDto(user);
         }
-        throw new HttpException('Пользователь не найден.', HttpStatus.NOT_FOUND);
-        
     }
 
     async getById(id: string): Promise<ViewUserDto> {
