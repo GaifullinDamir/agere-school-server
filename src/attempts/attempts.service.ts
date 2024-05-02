@@ -29,7 +29,7 @@ export class AttemptsService {
             }});
             if (userCourseInfo) {
                 const id = uuidv1();
-                const attempt - await this.attemptRepository.findOne({where: {
+                const attempt = await this.attemptRepository.findOne({where: {
                     userId: actor.id,
                     taskId
                 }});

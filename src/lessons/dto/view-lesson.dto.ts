@@ -3,6 +3,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Lesson } from "../lesson.model";
 import { ViewLearnModuleDto } from "src/learn-modules/dto/view-learn-module.dto";
 import { ViewTaskDto } from "src/tasks/dto/view-task.dto";
+import { ViewMessageDto } from "src/messages/dto/view-message.dto";
 
 export class ViewLessonDto {
     constructor(lesson: Lesson) {
@@ -15,9 +16,11 @@ export class ViewLessonDto {
         if (lesson.module) {
             this.module = new ViewLearnModuleDto(lesson.module);
         }
-
         if (lesson.tasks) {
             this.tasks = lesson.tasks.map(task => new ViewTaskDto(task));
+        }
+        if (lesson.messages) {
+            this.messages = lesson.messages.map(message => new ViewMessageDto(message));
         }
     }
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
@@ -58,5 +61,22 @@ export class ViewLessonDto {
         ], description: 'Модуль в котором содержится урок.'})
     readonly module: ViewLearnModuleDto;
 
+    @ApiProperty({example: [{
+        "id": "a8024860-0610-11ef-a973-bb503a5a86b1",
+        "name": "Задание 2",
+        "body": "{\"body\": \"task\"}",
+        "position": 0,
+        "lessonId": "fbff9140-04b0-11ef-b569-47fd305d5520",
+        "lesson": {
+            "id": "fbff9140-04b0-11ef-b569-47fd305d5520",
+            "name": "5",
+            "description": "{\"description\":\"message\"}",
+            "position": 0,
+            "ytVideoRef": "tqipC5TXSz8",
+            "moduleId": "7397fd70-03fb-11ef-ba10-458326fa9ca9"
+        }
+    }], description: 'task'})
     readonly tasks: ViewTaskDto[];
+
+    readonly messages: ViewMessageDto[];
 }

@@ -10,7 +10,6 @@ import { TasksModule } from 'src/tasks/tasks.module';
 import { UsersModule } from 'src/users/users.module';
 import { UserCourses } from 'src/courses/user-courses.model.dto';
 import { Course } from 'src/courses/courses.model';
-import { CoursesModule } from 'src/courses/courses.module';
 import { LearnModule } from 'src/learn-modules/learn-modules.model';
 
 @Module({

@@ -13,12 +13,13 @@ import { UserCourses } from 'src/courses/user-courses.model.dto';
 import { CoursesModule } from 'src/courses/courses.module';;
 import { Attempt } from 'src/attempts/attempts.model';
 import { AttemptsModule } from 'src/attempts/attempts.module';
+import { Message } from 'src/messages/messages.model';
 
 @Module({
   controllers: [UsersController],
   providers: [UsersService],
   imports: [
-    SequelizeModule.forFeature([User, Role, UserRoles, Course, UserCourses, Attempt]),
+    SequelizeModule.forFeature([User, Role, UserRoles, Course, UserCourses, Attempt, Message]),
     RolesModule,
     FilesModule,
     forwardRef(() => AuthModule),

@@ -1,39 +1,35 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript";
-import { Task } from "src/tasks/tasks.model";
+import { Lesson } from "src/lessons/lesson.model";
 import { User } from "src/users/users.model";
 
-interface AttemptCreationAttributes {
+
+interface MessagesCreationAttributes {
     id: string;
-    answer: string;
-    isRight: boolean;
-    taskId: string;
+    text: string;
+    lessonId: string;
     userId: string;
 }
 
 @Table({
-    tableName: 'attempts'
+    tableName: 'messages'
 })
-export class Attempt extends Model<Attempt, AttemptCreationAttributes> {
+export class Message extends Model<Message, MessagesCreationAttributes> {
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
     @Column({type: DataType.UUID, unique: true, primaryKey: true})
     id: string;
 
-    @ApiProperty({example: {"asnwer": "5"}, description: 'Данные для ответа.'})
-    @Column({type: DataType.JSON})
-    answer: string;
-
-    @ApiProperty({example: true, description: 'Правильность ответа.'})
-    @Column({type: DataType.BOOLEAN})
-    isRight: boolean;
+    @ApiProperty({example: 'Раскройте данную тему более подробно, пожалуйста.', description: 'text.'})
+    @Column({type: DataType.STRING})
+    text: string;
 
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
-    @ForeignKey(() => Task)
+    @ForeignKey(() => Lesson)
     @Column({type: DataType.UUID})
-    taskId: string;
+    lessonId: string;
 
-    @BelongsTo(() => Task)
-    task: Task;
+    @BelongsTo(() => Lesson)
+    lesson: Lesson;
 
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
     @ForeignKey(() => User)

@@ -3,6 +3,7 @@ import { BelongsToMany, Column, DataType, HasMany, Model, Table } from "sequeliz
 import { Attempt } from "src/attempts/attempts.model";
 import { Course } from "src/courses/courses.model";
 import { UserCourses } from "src/courses/user-courses.model.dto";
+import { Message } from "src/messages/messages.model";
 import { Role } from "src/roles/roles.model";
 import { UserRoles } from "src/roles/user-roles.model";
 
@@ -58,4 +59,7 @@ export class User extends Model<User, UserCreationAttributes> {
 
     @HasMany(() => Attempt)
     attempts: Attempt[];
+
+    @HasMany(() => Message)
+    messages: Message[];
 }

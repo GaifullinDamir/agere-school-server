@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { BelongsTo, Column, DataType, ForeignKey, HasMany, Model, Table } from "sequelize-typescript";
 import { LearnModule } from "src/learn-modules/learn-modules.model";
+import { Message } from "src/messages/messages.model";
 import { Task } from "src/tasks/tasks.model";
 
 
@@ -47,4 +48,7 @@ export class Lesson extends Model<Lesson, LessonCreationAttributes> {
 
     @HasMany(() => Task)
     tasks: Task[];
+
+    @HasMany(() => Message)
+    messages: Message[];
 }

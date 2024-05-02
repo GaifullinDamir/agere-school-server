@@ -2,6 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { User } from "../users.model";
 import { ViewRoleDto } from "src/roles/dto/view-role.dto";
 import { ViewCourseDto } from "src/courses/dto/view-course.dto";
+import { ViewMessageDto } from "src/messages/dto/view-message.dto";
 
 export class ViewUserDto {
     constructor(private user: User) {
@@ -13,12 +14,16 @@ export class ViewUserDto {
         this.email = user.email;
         this.password = user.password;
         
-        if(user.roles) {
+        if (user.roles) {
             this.roles = user.roles.map(role => new ViewRoleDto(role));
         }
         
-        if(user.courses) {
+        if (user.courses) {
             this.courses = user.courses.map(course => new ViewCourseDto(course)); 
+        }
+
+        if (user.messages) {
+            this.messages = user.messages.map(message => new ViewMessageDto(message));
         }
     }
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'uuid.'})
@@ -72,4 +77,6 @@ export class ViewUserDto {
         }
     ], description: 'Курсы пользователя.'})
     readonly courses: ViewCourseDto[];
+
+    readonly messages: ViewMessageDto[];
 }
