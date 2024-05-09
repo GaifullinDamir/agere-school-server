@@ -14,6 +14,7 @@ interface CourseCreationAttributes {
     description: string;
     logo: string;
     rating: number;
+    isVisible: boolean;
     userId: string;
 }
 
@@ -48,6 +49,10 @@ export class Course extends Model<Course, CourseCreationAttributes> {
     @ApiProperty({example: '0', description: 'Средний рейтинг курса.'})
     @Column({type: DataType.SMALLINT, allowNull: false})
     rating: number;
+
+    @ApiProperty({example: true, description: 'Видимость курса пользователю.'})
+    @Column({type: DataType.BOOLEAN})
+    isVisible: boolean;
 
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'id создателя курса.'})
     @ForeignKey(() => User)

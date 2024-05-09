@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsJSON, IsNumberString, IsOptional, IsString} from "class-validator";
+import { IsBoolean, IsJSON, IsNumberString, IsOptional, IsString} from "class-validator";
 
 export class UpdateCourseDto{
     @ApiProperty({example: 'Course name', description: 'Название курса.'})
@@ -29,4 +29,9 @@ export class UpdateCourseDto{
     @IsNumberString()
     @IsOptional()
     readonly rating: number;
+
+    @ApiProperty({example: true, description: 'Видимость курса пользователю.'})
+    @IsBoolean({message: 'isVisible-должно быть boolean.'})
+    @IsOptional()
+    readonly isVisible: boolean;
 }

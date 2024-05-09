@@ -11,6 +11,7 @@ export class ViewCourseDto{
         this.description = course.description;
         this.logo = course.logo;
         this.rating = course.rating;
+        this.isVisible = course.isVisible;
         this.userId = course.userId;
         if(course.author) {
             this.author = new ViewUserDto(course.author);
@@ -42,6 +43,9 @@ export class ViewCourseDto{
 
     @ApiProperty({example: '0', description: 'Средний рейтинг курса.'})
     readonly rating: number;
+
+    @ApiProperty({example: true, description: 'Видимость курса пользователю.'})
+    readonly isVisible: boolean;
 
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'id создателя курса.'})
     readonly userId: string;
