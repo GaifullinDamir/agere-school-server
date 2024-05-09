@@ -16,13 +16,24 @@ export class CoursesService {
     async create(dto: CreateCourseDto, userId: string, image: Express.Multer.File): Promise<ViewCourseDto>{
         const id = uuidv1();
         const {fileName, description} = await this.processData(dto, image);
-        const course = await this.courseRepository.create({... dto, id, userId, rating: 0, description, logo: fileName});
+        const course = await this.courseRepository.create({... dto, id, userId, rating: 0, description, logo: fileName, isVisible: false});
 
         return new ViewCourseDto(course);
     }
 
     async getAll(): Promise<ViewCourseDto[]> {
         const courses = await this.courseRepository.findAll({include: [{all: true}]});
+        const coursesViews = [];
+        if (courses.length) {
+            courses.forEach(course => {
+                coursesViews.push(new ViewCourseDto(course));
+            })
+        }
+        return coursesViews;
+    }
+
+    async getAllVisible(): Promise<ViewCourseDto[]> {
+        const courses = await this.courseRepository.findAll({where: {isVisible: true}, include: {all: true}});
         const coursesViews = [];
         if (courses.length) {
             courses.forEach(course => {
