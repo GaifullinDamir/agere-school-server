@@ -35,6 +35,16 @@ export class UsersController {
         return this.usersService.getAll();
     }
 
+    @ApiOperation({summary: 'Получить всех пользователей с пагинацией.'})
+    @ApiResponse({status: 200, type: [User]})
+    @ApiBearerAuth()
+    @Roles('admin')
+    @UseGuards(RolesGuard)
+    @Get('/:page&:size')
+    getAllUsersWithPagination(@Param('page') page: number, @Param('size') size: number) {
+        return this.usersService.getAllWithPagination(page, size);
+    }
+
     @ApiOperation({summary: 'Получить пользователя по id.'})
     @ApiResponse({status: 200, type: User})
     @ApiBearerAuth()

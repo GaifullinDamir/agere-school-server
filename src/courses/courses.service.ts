@@ -60,9 +60,9 @@ export class CoursesService {
         return coursesViews;
     }
 
-    async getAllVisibleWithPagination(page: number, pageSize: number): Promise<{rows: ViewCourseDto[], count: number}> {
-        const limit = pageSize; 
-        const offset = (page - 1) * pageSize;
+    async getAllVisibleWithPagination(page: number, size: number): Promise<{rows: ViewCourseDto[], count: number}> {
+        const limit = size; 
+        const offset = (page - 1) * size;
         const courses = await this.courseRepository.findAndCountAll({
             limit: limit,
             offset: offset,

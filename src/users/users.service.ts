@@ -45,6 +45,23 @@ export class UsersService {
         return [];
     }
 
+    async getAllWithPagination(page: number, size: number): Promise<{rows: ViewUserDto[], count: number}> {
+        const limit = size;
+        const offset = (page - 1) * size;
+        const users = await this.userRepository.findAndCountAll({
+            limit: limit,
+            offset: offset,
+            include: {all: true}
+        });
+        const usersViews = {rows: [], count: 0};
+        if (users.count) {
+            users.rows.forEach(user => {
+                usersViews.rows.push(new ViewUserDto(user));
+            });
+        }
+        return usersViews;
+    }
+
     async getByEmail(email: string) : Promise<ViewUserDto>{
         const user = await this.userRepository.findOne({
             where:{email},
