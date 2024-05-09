@@ -6,21 +6,19 @@ import { FilesService } from 'src/files/files.service';
 import { v1 as uuidv1 } from 'uuid';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { ViewCourseDto } from './dto/view-course.dto';
-import { User } from 'src/users/users.model';
 
 @Injectable()
 export class CoursesService {
 
     constructor(@InjectModel(Course) private courseRepository: typeof Course,
-        @InjectModel(User) private userRepository: typeof User,
         private filesService: FilesService) {
     }
-    async create(dto: CreateCourseDto, userId: string, image: Express.Multer.File): Promise<Course>{
+    async create(dto: CreateCourseDto, userId: string, image: Express.Multer.File): Promise<ViewCourseDto>{
         const id = uuidv1();
         const {fileName, description} = await this.processData(dto, image);
         const course = await this.courseRepository.create({... dto, id, userId, rating: 0, description, logo: fileName});
 
-        return course;
+        return new ViewCourseDto(course);
     }
 
     async getAll(): Promise<ViewCourseDto[]> {

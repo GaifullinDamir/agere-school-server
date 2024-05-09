@@ -17,9 +17,7 @@ import { LearnModule } from 'src/learn-modules/learn-modules.model';
   providers: [AttemptsService],
   imports: [
     SequelizeModule.forFeature([User, Task, Attempt, UserCourses, Course, LearnModule]),
-    AuthModule,
-    forwardRef(() => TasksModule),
-    forwardRef(() => UsersModule)
+    AuthModule
   ]
 })
 export class AttemptsModule {}

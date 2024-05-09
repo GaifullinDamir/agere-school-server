@@ -15,7 +15,6 @@ import { Message } from 'src/messages/messages.model';
   imports: [
     SequelizeModule.forFeature([LearnModule, Lesson, Message]),
     AuthModule,
-    LearnModulesModule,
     ParsersModule
   ],
   exports: [LessonsService]

@@ -17,9 +17,7 @@ import { LearnModule } from 'src/learn-modules/learn-modules.model';
   imports: [
     SequelizeModule.forFeature([User, Course, UserCourses, LearnModule]),
     FilesModule,
-    RolesModule,
-    forwardRef(() => AuthModule),
-    forwardRef(() => UsersModule)
+    AuthModule
   ],
   exports: [CoursesService]
 })

@@ -6,16 +6,14 @@ import { Course } from 'src/courses/courses.model';
 import { v1 as uuidv1 } from 'uuid';
 import { LearnModule } from './learn-modules.model';
 import { UpdatetLearnModuleDto } from './dto/update-learn-module.dto';
-import { CoursesService } from 'src/courses/courses.service';
 
 @Injectable()
 export class LearnModulesService {
     constructor(@InjectModel(Course) private courseRepository: typeof Course,
-        @InjectModel(LearnModule) private learnModuleRepository: typeof LearnModule,
-        private courseService: CoursesService) {}
+        @InjectModel(LearnModule) private learnModuleRepository: typeof LearnModule) {}
 
     async create(actor: any, courseId: string, dto: CreateLearnModuleDto): Promise<LearnModule> {
-        const course = await this.courseService.getById(courseId);
+        const course = await this.courseRepository.findByPk(courseId, {include: {all: true}});
         if (course && course.userId === actor.id) {
             const modules = await this.learnModuleRepository.findAll({where:{courseId}});
             const sortedModules = modules.sort((m1, m2) => m1.position - m2.position);
