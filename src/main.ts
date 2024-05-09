@@ -12,6 +12,7 @@ async function start() {
         .setDescription('Документация к api Agere.')
         .setVersion('1.0.0')
         .addTag('Agere')
+        .addBearerAuth()
         .build()
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('/api/docs', app, document);
