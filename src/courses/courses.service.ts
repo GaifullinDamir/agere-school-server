@@ -22,11 +22,28 @@ export class CoursesService {
     }
 
     async getAll(): Promise<ViewCourseDto[]> {
-        const courses = await this.courseRepository.findAll({include: [{all: true}]});
+        const courses = await this.courseRepository.findAll({include: {all: true}});
         const coursesViews = [];
         if (courses.length) {
             courses.forEach(course => {
                 coursesViews.push(new ViewCourseDto(course));
+            })
+        }
+        return coursesViews;
+    }
+
+    async getAllWithPagination(page: number, pageSize: number): Promise<{rows: ViewCourseDto[], count: number}> {
+        const limit = pageSize; 
+        const offset = (page - 1) * pageSize;
+        const courses = await this.courseRepository.findAndCountAll({
+            limit: limit,
+            offset: offset,
+            include: {all: true}
+        });
+        const coursesViews = {rows: [], count: 0};
+        if (courses.count) {
+            courses.rows.forEach(course => {
+                coursesViews.rows.push(new ViewCourseDto(course));
             })
         }
         return coursesViews;
@@ -38,6 +55,24 @@ export class CoursesService {
         if (courses.length) {
             courses.forEach(course => {
                 coursesViews.push(new ViewCourseDto(course));
+            })
+        }
+        return coursesViews;
+    }
+
+    async getAllVisibleWithPagination(page: number, pageSize: number): Promise<{rows: ViewCourseDto[], count: number}> {
+        const limit = pageSize; 
+        const offset = (page - 1) * pageSize;
+        const courses = await this.courseRepository.findAndCountAll({
+            limit: limit,
+            offset: offset,
+            where: {isVisible: true},
+            include: {all: true}
+        });
+        const coursesViews = {rows: [], count: 0};
+        if (courses.count) {
+            courses.rows.forEach(course => {
+                coursesViews.rows.push(new ViewCourseDto(course));
             })
         }
         return coursesViews;

@@ -43,6 +43,24 @@ export class CoursesController {
         return this.courseService.getAll();
     }
 
+    @ApiOperation({summary: 'Получить все курсы с пагинацией.'})
+    @ApiResponse({status: 200})
+    @ApiBearerAuth()
+    @Roles('admin')
+    @UseGuards(RolesGuard)
+    @Get('/:page&:size')
+    getAllCoursesWithPagination(@Param('page') page: number, @Param('size') size: number) {
+        return this.courseService.getAllWithPagination(page, size);
+    }
+
+    @ApiOperation({summary: 'Получить все видимые крусы с пагинацией.'})
+    @ApiResponse({status: 200})
+    @Get('visible/:page&:size')
+    getAllVisibleCoursesWithPagination(@Param('page') page: number, @Param('size') size: number) {
+        return this.courseService.getAllVisibleWithPagination(page, size);
+    }
+
+
     @ApiOperation({summary: 'Получить курс по id.'})
     @ApiResponse({status: 200, type: Course})
     @Get('/:id')
