@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, V
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { ViewRoleDto } from './dto/view-role.dto';
@@ -14,6 +14,7 @@ export class RolesController {
 
     @ApiOperation({summary: 'Создать роль.'})
     @ApiResponse({status: 200, type: ViewRoleDto})
+    @ApiBearerAuth()
     @Roles('admin')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -38,6 +39,7 @@ export class RolesController {
 
     @ApiOperation({summary: 'Изменить роль.'})
     @ApiResponse({status: 200, type: [Number]})
+    @ApiBearerAuth()
     @Roles('admin')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -48,6 +50,7 @@ export class RolesController {
 
     @ApiOperation({summary: 'Удалить роль.'})
     @ApiResponse({status: 200, type: Number})
+    @ApiBearerAuth()
     @Roles('admin')
     @UseGuards(RolesGuard)
     @Delete('/:id')

@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { GetUser } from 'src/auth/get-user.decorator';
@@ -16,6 +16,7 @@ export class LessonsController {
 
     @ApiOperation({summary: 'Создать урок.'})
     @ApiResponse({status: 200, type: Lesson})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -40,6 +41,7 @@ export class LessonsController {
 
     @ApiOperation({summary: 'Изменить урок.'})
     @ApiResponse({status: 200, type: Lesson})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -50,6 +52,7 @@ export class LessonsController {
 
     @ApiOperation({summary: 'Удалить урок по id.'})
     @ApiResponse({status: 200})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @Delete('/:id')

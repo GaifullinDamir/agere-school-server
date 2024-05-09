@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AttemptsService } from './attempts.service';
 import { Attempt } from './attempts.model';
 import { Roles } from 'src/auth/roles-auth.decorator';
@@ -15,6 +15,7 @@ export class AttemptsController {
 
     @ApiOperation({summary: 'Создать попытку.'})
     @ApiResponse({status: 200, type: Attempt})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -25,6 +26,7 @@ export class AttemptsController {
 
     @ApiOperation({summary: 'Получить попытку по id задачи.'})
     @ApiResponse({status: 200, type: Attempt})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @Get('/:taskId')
@@ -34,6 +36,7 @@ export class AttemptsController {
 
     @ApiOperation({summary: 'Изменить попытку по id задачи.'})
     @ApiResponse({status: 200, type: Attempt})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)

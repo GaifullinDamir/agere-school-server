@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, FileTypeValidator, Get, Param, ParseFilePipe, Post, Put, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './users.model';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
@@ -27,6 +27,7 @@ export class UsersController {
 
     @ApiOperation({summary: 'Получить всех пользователей.'})
     @ApiResponse({status: 200, type: [User]})
+    @ApiBearerAuth()
     @Roles('admin')
     @UseGuards(RolesGuard)
     @Get()
@@ -36,6 +37,7 @@ export class UsersController {
 
     @ApiOperation({summary: 'Получить пользователя по id.'})
     @ApiResponse({status: 200, type: User})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @Get('/:id')
@@ -45,6 +47,7 @@ export class UsersController {
 
     @ApiOperation({summary: 'Изменить пользователя по id.'})
     @ApiResponse({status: 200, type: [Number]})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -64,6 +67,7 @@ export class UsersController {
 
     @ApiOperation({summary: 'Удалить пользователя по id.'})
     @ApiResponse({status: 200, type: Number})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @Delete('/:id')
@@ -73,6 +77,7 @@ export class UsersController {
 
     @ApiOperation({summary: 'Выдать роль.'})
     @ApiResponse({status: 200})
+    @ApiBearerAuth()
     @Roles('admin')
     @UseGuards(RolesGuard)
     @Post('/role/:id')
@@ -82,6 +87,7 @@ export class UsersController {
 
     @ApiOperation({summary: 'Забрать роль.'})
     @ApiResponse({status: 200})
+    @ApiBearerAuth()
     @Roles('admin')
     @UseGuards(RolesGuard)
     @Put('/role/:id')
@@ -91,6 +97,7 @@ export class UsersController {
 
     @ApiOperation({summary: 'Подписаться на курс.'})
     @ApiResponse({status: 200})
+    @ApiBearerAuth()
     @Roles('user')
     @UseGuards(RolesGuard)
     @Post('/course/:id')

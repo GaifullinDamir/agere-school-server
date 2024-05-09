@@ -2,7 +2,7 @@ import { Body, Controller, Delete, FileTypeValidator, Get, Param, ParseFilePipe,
 import { CreateCourseDto } from './dto/create-course.dto';
 import { CoursesService } from './courses.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Course } from './courses.model';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
@@ -16,6 +16,7 @@ export class CoursesController {
 
     @ApiOperation({summary: 'Создать курс.'})
     @ApiResponse({status: 200, type: Course})
+    @ApiBearerAuth()
     @Roles("user")
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -34,6 +35,9 @@ export class CoursesController {
 
     @ApiOperation({summary: 'Получить все курсы.'})
     @ApiResponse({status: 200, type: [Course]})
+    @ApiBearerAuth()
+    @Roles('admin')
+    @UseGuards(RolesGuard)
     @Get()
     getAllCourses() {
         return this.courseService.getAll();
@@ -48,6 +52,7 @@ export class CoursesController {
 
     @ApiOperation({summary: 'Изменить курс.'})
     @ApiResponse({status: 200, type: [Number]})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -67,6 +72,7 @@ export class CoursesController {
 
     @ApiOperation({summary: 'Удалить курс по id.'})
     @ApiResponse({status: 200, type: Number})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @Delete('/:id')

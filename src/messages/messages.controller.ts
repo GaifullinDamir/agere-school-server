@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MessagesService } from './messages.service';
 import { Message } from './messages.model';
 import { Roles } from 'src/auth/roles-auth.decorator';
@@ -15,6 +15,7 @@ export class MessagesController {
     
     @ApiOperation({summary: 'Создать сообщение.'})
     @ApiResponse({status: 200, type: Message})
+    @ApiBearerAuth()
     @Roles('user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -25,6 +26,7 @@ export class MessagesController {
 
     @ApiOperation({summary: 'Получить все сообщения урока.'})
     @ApiResponse({status: 200, type: [Message]})
+    @ApiBearerAuth()
     @Roles('user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -35,6 +37,7 @@ export class MessagesController {
 
     @ApiOperation({summary: 'Изменить сообщение.'})
     @ApiResponse({status: 200, type: Message})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -45,6 +48,7 @@ export class MessagesController {
 
     @ApiOperation({summary: 'Удалить сообщение.'})
     @ApiResponse({status: 200})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @Delete('/:messageId')

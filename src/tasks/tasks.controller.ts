@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TasksService } from './tasks.service';
 import { Task } from './tasks.model';
 import { Roles } from 'src/auth/roles-auth.decorator';
@@ -15,6 +15,7 @@ export class TasksController {
 
     @ApiOperation({summary: 'Создать задание.'})
     @ApiResponse({status: 200, type: Task})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -39,6 +40,7 @@ export class TasksController {
 
     @ApiOperation({summary: 'Изменить задание.'})
     @ApiResponse({status: 200, type: Task})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -49,6 +51,7 @@ export class TasksController {
 
     @ApiOperation({summary: 'Удалить задание по id.'})
     @ApiResponse({status: 200})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @Delete('/:id')

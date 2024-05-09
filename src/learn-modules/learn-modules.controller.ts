@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LearnModulesService } from './learn-modules.service';
 import { LearnModule } from './learn-modules.model';
 import { Roles } from 'src/auth/roles-auth.decorator';
@@ -16,6 +16,7 @@ export class LearnModulesController {
 
     @ApiOperation({summary: 'Создать модуль.'})
     @ApiResponse({status: 200, type: LearnModule})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -40,6 +41,7 @@ export class LearnModulesController {
 
     @ApiOperation({summary: 'Изменить модуль.'})
     @ApiResponse({status: 200, type: LearnModule})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
@@ -50,6 +52,7 @@ export class LearnModulesController {
 
     @ApiOperation({summary: 'Удалить модуль по id.'})
     @ApiResponse({status: 200})
+    @ApiBearerAuth()
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @Delete('/:id')
