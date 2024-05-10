@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, FileTypeValidator, Get, Param, ParseFilePipe, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, FileTypeValidator, Get, MaxFileSizeValidator, Param, ParseFilePipe, Post, Put, Req, UploadedFile, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { CoursesService } from './courses.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -26,7 +26,8 @@ export class CoursesController {
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
-                    new FileTypeValidator({fileType: /(jpg|jpeg|png)$/})
+                    new FileTypeValidator({fileType: /(jpg|jpeg|png)$/}),
+                    new MaxFileSizeValidator({ maxSize: 1000 })
                 ]
             })
         ) logo: Express.Multer.File) {
@@ -80,7 +81,8 @@ export class CoursesController {
         @UploadedFile(
             new ParseFilePipe({
                 validators: [
-                    new FileTypeValidator({fileType: /(jpg|jpeg|png)$/})
+                    new FileTypeValidator({fileType: /(jpg|jpeg|png)$/}),
+                    new MaxFileSizeValidator({ maxSize: 1000 })
                 ],
                 fileIsRequired: false
             })
