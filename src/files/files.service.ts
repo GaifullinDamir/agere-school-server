@@ -9,7 +9,7 @@ export class FilesService {
         try {
             const fileExt = path.parse(file.originalname).ext;
             const fileName = `${uuidv1()}${fileExt}`;
-            const dirPath = path.resolve(__dirname, '..', 'static');
+            const dirPath = path.resolve(__dirname, '..', '..', 'static');
 
             fsPromises.access(dirPath)
                 .catch((err) => {
@@ -28,7 +28,7 @@ export class FilesService {
     }
     async getByName(fileName: string): Promise<Buffer> {
         try {
-            const dirPath = path.resolve(__dirname, '..', 'static');
+            const dirPath = path.resolve(__dirname, '..', '..', 'static');
             const filePath = path.join(dirPath, fileName);
             const file = await fsPromises.readFile(filePath);
             return file;
