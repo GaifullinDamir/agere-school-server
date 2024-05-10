@@ -45,6 +45,7 @@ export class CoursesService {
             courses.rows.forEach(course => {
                 coursesViews.rows.push(new ViewCourseDto(course));
             })
+            coursesViews.count = courses.count;
         }
         return coursesViews;
     }
@@ -74,6 +75,7 @@ export class CoursesService {
             courses.rows.forEach(course => {
                 coursesViews.rows.push(new ViewCourseDto(course));
             })
+            coursesViews.count = courses.count;
         }
         return coursesViews;
     }

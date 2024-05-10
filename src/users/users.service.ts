@@ -58,6 +58,7 @@ export class UsersService {
             users.rows.forEach(user => {
                 usersViews.rows.push(new ViewUserDto(user));
             });
+            usersViews.count = users.count;
         }
         return usersViews;
     }

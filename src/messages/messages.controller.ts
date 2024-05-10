@@ -35,6 +35,17 @@ export class MessagesController {
         return this.messageService.getAll(actor, lessonId);
     }
 
+    @ApiOperation({summary: 'Получить все сообщения урока с пагинацией.'})
+    @ApiResponse({status: 200, type: [Message]})
+    @ApiBearerAuth()
+    @Roles('user')
+    @UseGuards(RolesGuard)
+    @UsePipes(ValidationPipe)
+    @Get('/:lessonId/:page&:size')
+    getAllMessagesWithPagination(@GetUser() actor: any, @Param('lessonId') lessonId: string, @Param('page') page: number, @Param('size') size: number) {
+        return this.messageService.getAllWithPagination(actor, lessonId, page, size);
+    }
+
     @ApiOperation({summary: 'Изменить сообщение.'})
     @ApiResponse({status: 200, type: Message})
     @ApiBearerAuth()

@@ -58,6 +58,40 @@ export class MessagesService {
         throw new HttpException('Урок не найден.', HttpStatus.NOT_FOUND);
     }
 
+    async getAllWithPagination(actor: any, lessonId: string, page: number, size: number): Promise<{rows: ViewMessageDto[], count: number}> {
+        const limit = size;
+        const offset = (page - 1) * size;
+        const lesson = await this.lessonRepository.findByPk(lessonId, {include: {all: true}});
+        if (lesson) {
+            const userCourseInfo = await this.userCourseRepository.findOne({where: {
+                userId: actor.id,
+                courseId: lesson.module.courseId
+            }})
+            if (userCourseInfo) {
+                const messages = await this.messageRepository.findAndCountAll({
+                        where: {
+                            userId: actor.id,
+                            lessonId
+                        },
+                        limit: limit,
+                        offset: offset,
+                        include: {all: true}
+                });
+                const messagesViews = {rows: [], count: 0};
+                if (messages.count) {
+                    messages.rows.forEach(message => {
+                        messagesViews.rows.push(new ViewMessageDto(message));
+                    });
+                    messagesViews.count = messages.count;
+                }
+                return messagesViews;
+            }
+            throw new HttpException('Пользователь не подписан на курс.', HttpStatus.FORBIDDEN);
+        }
+        throw new HttpException('Урок не найден.', HttpStatus.NOT_FOUND);
+
+    }
+
     async update(actor: any, messageId: string, dto: UpdateMessageDto): Promise<ViewMessageDto> {
         const message = await this.messageRepository.findByPk(messageId, {include: {all: true}});
         if (message) {

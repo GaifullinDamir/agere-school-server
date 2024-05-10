@@ -36,7 +36,7 @@ export class UsersController {
     }
 
     @ApiOperation({summary: 'Получить всех пользователей с пагинацией.'})
-    @ApiResponse({status: 200, type: [User]})
+    @ApiResponse({status: 200})
     @ApiBearerAuth()
     @Roles('admin')
     @UseGuards(RolesGuard)
