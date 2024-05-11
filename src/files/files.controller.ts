@@ -1,4 +1,4 @@
-import { Body, Controller, FileTypeValidator, Get, Param, ParseFilePipe, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, FileTypeValidator, Get, Param, ParseFilePipe, Post, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FilesService } from './files.service';
 import { Roles } from 'src/auth/roles-auth.decorator';
@@ -24,10 +24,17 @@ export class FilesController {
         return this.filesService.create(file);
     }
 
+    // @Roles('admin', 'user')
+    // @UseGuards(RolesGuard)
+    // @Get('/:value')
+    // getFileByName(@Param('value') value: string) {
+    //     return this.filesService.getByName(value);
+    // }
+
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @Get('/:value')
-    getFileByName(@Param('value') value: string) {
-        return this.filesService.getByName(value);
+    getFileByName(@Param('value') value: string, @Res() res: any) {
+        res.sendFile(value, { root: 'static'});
     }
 }

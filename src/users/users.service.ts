@@ -108,7 +108,7 @@ export class UsersService {
     async addRole(userId: string, dto: AddRoleDto): Promise<AddRoleDto> {
         const user = await this.userRepository.findByPk(userId);
         const role = await this.roleRepository.findOne({
-            where: {value: 'user'},
+            where: {value: dto.value},
             include: {all: true}
         });
         if (role && user) {
