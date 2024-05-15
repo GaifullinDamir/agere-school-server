@@ -56,7 +56,7 @@ export class CoursesController {
 
     @ApiOperation({summary: 'Получить все видимые крусы с пагинацией.'})
     @ApiResponse({status: 200})
-    @Get('visible/:page&:size')
+    @Get('/visible/:page&:size')
     getAllVisibleCoursesWithPagination(@Param('page') page: number, @Param('size') size: number) {
         return this.courseService.getAllVisibleWithPagination(page, size);
     }
