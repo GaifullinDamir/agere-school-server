@@ -61,7 +61,7 @@ export class CoursesService {
         return coursesViews;
     }
 
-    async getAllVisibleWithPagination(page: number, size: number): Promise<{rows: ViewCourseDto[], count: number}> {
+    async getAllVisibleWithPagination(page: number, size: number): Promise<ViewCourseDto[]> {
         const limit = size; 
         const offset = (page - 1) * size;
         const courses = await this.courseRepository.findAndCountAll({
@@ -70,12 +70,11 @@ export class CoursesService {
             where: {isVisible: true},
             include: {all: true}
         });
-        const coursesViews = {rows: [], count: 0};
+        const coursesViews = [];
         if (courses.count) {
             courses.rows.forEach(course => {
-                coursesViews.rows.push(new ViewCourseDto(course));
+                coursesViews.push(new ViewCourseDto(course));
             })
-            coursesViews.count = courses.count;
         }
         return coursesViews;
     }
@@ -99,7 +98,7 @@ export class CoursesService {
             const result = await this.courseRepository
             .update(
                 {
-                    ...dto, id, description, userId, logo: fileName? fileName : dto.logo
+                    ...dto, id, description, userId, logo: fileName? fileName : dto.logo,
                 },
                 {where: {id}}
             )

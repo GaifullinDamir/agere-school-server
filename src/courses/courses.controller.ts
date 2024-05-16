@@ -27,7 +27,6 @@ export class CoursesController {
             new ParseFilePipe({
                 validators: [
                     new FileTypeValidator({fileType: /(jpg|jpeg|png)$/}),
-                    new MaxFileSizeValidator({ maxSize: 1000 })
                 ]
             })
         ) logo: Express.Multer.File) {
@@ -54,19 +53,18 @@ export class CoursesController {
         return this.courseService.getAllWithPagination(page, size);
     }
 
-    @ApiOperation({summary: 'Получить все видимые крусы с пагинацией.'})
-    @ApiResponse({status: 200})
-    @Get('/visible/:page&:size')
-    getAllVisibleCoursesWithPagination(@Param('page') page: number, @Param('size') size: number) {
-        return this.courseService.getAllVisibleWithPagination(page, size);
-    }
-
-
     @ApiOperation({summary: 'Получить курс по id.'})
     @ApiResponse({status: 200, type: Course})
     @Get('/:id')
     getCourseById(@Param('id') id: string) {
         return this.courseService.getById(id);
+    }
+
+    @ApiOperation({summary: 'Получить все видимые крусы с пагинацией.'})
+    @ApiResponse({status: 200})
+    @Get('/visible/:page&:size')
+    getAllVisibleCoursesWithPagination(@Param('page') page: number, @Param('size') size: number) {
+        return this.courseService.getAllVisibleWithPagination(page, size);
     }
 
     @ApiOperation({summary: 'Изменить курс.'})
@@ -99,4 +97,6 @@ export class CoursesController {
     deleteCourse(@Param('id') id: string,  @GetUser() user: any) {
         return this.courseService.delete(id, user);
     }
+
+    
 }
