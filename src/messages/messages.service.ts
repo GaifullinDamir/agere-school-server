@@ -58,7 +58,7 @@ export class MessagesService {
         throw new HttpException('Урок не найден.', HttpStatus.NOT_FOUND);
     }
 
-    async getAllWithPagination(actor: any, lessonId: string, page: number, size: number): Promise<{rows: ViewMessageDto[], count: number}> {
+    async getAllWithPagination(actor: any, lessonId: string, page: number, size: number): Promise<ViewMessageDto[]> {
         const limit = size;
         const offset = (page - 1) * size;
         const lesson = await this.lessonRepository.findByPk(lessonId, {include: {all: true}});
@@ -77,12 +77,11 @@ export class MessagesService {
                         offset: offset,
                         include: {all: true}
                 });
-                const messagesViews = {rows: [], count: 0};
+                const messagesViews = [];
                 if (messages.count) {
                     messages.rows.forEach(message => {
-                        messagesViews.rows.push(new ViewMessageDto(message));
+                        messagesViews.push(new ViewMessageDto(message));
                     });
-                    messagesViews.count = messages.count;
                 }
                 return messagesViews;
             }

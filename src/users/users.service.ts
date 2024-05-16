@@ -45,7 +45,7 @@ export class UsersService {
         return [];
     }
 
-    async getAllWithPagination(page: number, size: number): Promise<{rows: ViewUserDto[], count: number}> {
+    async getAllWithPagination(page: number, size: number): Promise<ViewUserDto[]> {
         const limit = size;
         const offset = (page - 1) * size;
         const users = await this.userRepository.findAndCountAll({
@@ -53,12 +53,11 @@ export class UsersService {
             offset: offset,
             include: {all: true}
         });
-        const usersViews = {rows: [], count: 0};
+        const usersViews = [];
         if (users.count) {
             users.rows.forEach(user => {
-                usersViews.rows.push(new ViewUserDto(user));
+                usersViews.push(new ViewUserDto(user));
             });
-            usersViews.count = users.count;
         }
         return usersViews;
     }
