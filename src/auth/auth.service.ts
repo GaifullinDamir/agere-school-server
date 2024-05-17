@@ -16,7 +16,10 @@ export class AuthService {
         
     async login(userDto: AuthUserDto) {
         const user = await this.validateUser(userDto);
-        return this.generateToken(user);
+        const tokens = await this.generateToken(user);
+        await this.saveToken(user.id, tokens.refreshToken);
+
+        return tokens;
     }
 
     async registration(userDto: CreateUserDto) {
@@ -30,7 +33,27 @@ export class AuthService {
         const hashPassword = await bcrypt.hash(userDto.password, 5);
         const user = await this.userService.create({...userDto, password: hashPassword});
 
-        return this.generateToken(user);
+        const tokens = await this.generateToken(user);
+        await this.saveToken(user.id, tokens.refreshToken);
+
+        return tokens;
+    }
+
+    async logout(refreshToken: string) {
+        const data = this.jwtService.verify(refreshToken);
+        const user = await this.userRepository.findByPk(data.id);
+        if (user) {
+            return user.update({refreshToken: ''});
+        }
+        throw new HttpException('Пользователь не найден.', HttpStatus.NOT_FOUND);
+    }
+
+    async saveToken(userId: string, token: string) {
+        const user = await this.userRepository.findByPk(userId);
+        if (user) {
+            return await user.update({refreshToken: token});
+        }
+        throw new HttpException('Пользователь не найден.', HttpStatus.NOT_FOUND);
     }
 
     // async checkIsAuth(token: string) {
@@ -43,9 +66,11 @@ export class AuthService {
     // }
 
     private async generateToken(user: ViewUserDto) {
-        const payload = {email: user.email, password: user.password, id: user.id, roles: user.roles}
+        const payload = {email: user.email, id: user.id, roles: user.roles};
+        const refreshPayload = {email: user.email, id: user.id}
         return {
-            token: this.jwtService.sign(payload)
+            accessToken: this.jwtService.sign(payload),
+            refreshToken: this.jwtService.sign(refreshPayload)
         };
     }
 

@@ -14,6 +14,7 @@ interface UserCreationAttributes {
     patronimic: string;
     email: string;
     password: string;
+    refreshToken: string;
 }
 
 @Table({
@@ -47,6 +48,10 @@ export class User extends Model<User, UserCreationAttributes> {
     @ApiProperty({example: 'password', description: 'Пароль пользователя.'})
     @Column({type: DataType.STRING, allowNull: false})
     password: string;
+
+    @ApiProperty({example: 'token', description: 'Refresh token пользователя.'})
+    @Column({type: DataType.STRING})
+    refreshToken: string;
 
     @BelongsToMany(() => Role, () => UserRoles)
     roles: Role[];

@@ -24,7 +24,7 @@ export class UsersService {
         const id = uuidv1();
         const user = await this.userRepository.create({...dto, id});
         const role = await this.roleRepository.findOne({
-            where: {value: 'user'},
+            where: {value: 'admin'},
             include: {all: true}
         });
         if (role) {
