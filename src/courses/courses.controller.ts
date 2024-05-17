@@ -80,7 +80,6 @@ export class CoursesController {
             new ParseFilePipe({
                 validators: [
                     new FileTypeValidator({fileType: /(jpg|jpeg|png)$/}),
-                    new MaxFileSizeValidator({ maxSize: 1000 })
                 ],
                 fileIsRequired: false
             })

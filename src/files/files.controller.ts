@@ -24,13 +24,6 @@ export class FilesController {
         return this.filesService.create(file);
     }
 
-    // @Roles('admin', 'user')
-    // @UseGuards(RolesGuard)
-    // @Get('/:value')
-    // getFileByName(@Param('value') value: string) {
-    //     return this.filesService.getByName(value);
-    // }
-
     @Roles('admin', 'user')
     @UseGuards(RolesGuard)
     @Get('/:value')

@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
@@ -23,4 +23,11 @@ export class AuthController {
     registration(@Body() userDto: CreateUserDto) {
         return this.authService.registration(userDto);
     }
+
+    // @ApiOperation({summary: 'Проверка авторизции пользователя.'})
+    // @ApiResponse({status: 200})
+    // @Post('/check/:token')
+    // checkIsAuth(@Param('token') token: string) {
+    //     return this.authService.checkIsAuth(token);
+    // }
 }

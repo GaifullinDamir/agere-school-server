@@ -43,7 +43,7 @@ import { Message } from "./messages/messages.model";
           autoLoadModels: true
         }),
         ServeStaticModule.forRoot({
-          rootPath: path.resolve(__dirname, '..', '..', 'static'),
+          rootPath: path.resolve(__dirname, '..',  'static'),
         }),
         UsersModule,
         RolesModule,

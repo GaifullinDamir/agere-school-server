@@ -33,8 +33,17 @@ export class AuthService {
         return this.generateToken(user);
     }
 
+    // async checkIsAuth(token: string) {
+    //     const payload = this.jwtService.verify(token);
+    //     const user = await this.validateUser({email: payload.email, password: payload.password});
+        
+
+    //     return this.generateToken(user);
+
+    // }
+
     private async generateToken(user: ViewUserDto) {
-        const payload = {email: user.email, id: user.id, roles: user.roles}
+        const payload = {email: user.email, password: user.password, id: user.id, roles: user.roles}
         return {
             token: this.jwtService.sign(payload)
         };
