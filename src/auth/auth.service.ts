@@ -40,12 +40,30 @@ export class AuthService {
     }
 
     async logout(refreshToken: string) {
-        const data = this.jwtService.verify(refreshToken);
-        const user = await this.userRepository.findByPk(data.id);
-        if (user) {
-            return user.update({refreshToken: ''});
+        const data = await this.validateToken(refreshToken);
+        if (data) {
+            const user = await this.userRepository.findByPk(data.id);
+            if (user) {
+                return user.update({refreshToken: ''});
+            }
         }
-        throw new HttpException('Пользователь не найден.', HttpStatus.NOT_FOUND);
+        throw new HttpException('Пользователь не найден.', HttpStatus.UNAUTHORIZED);
+    }
+
+    async refresh(refreshToken: string) {
+        if (!refreshToken) {
+            throw new HttpException('Пользователь не авторизован.', HttpStatus.UNAUTHORIZED);
+        }
+        const data = await this.validateToken(refreshToken);
+        if (data) {
+            const user = await this.userRepository.findByPk(data.id);
+            if (user) {
+                const tokens = await this.generateToken(user);
+                await user.update({refreshToken: tokens.refreshToken});
+                return tokens;
+            }
+        }
+        throw new HttpException('Пользователь не авторизован.', HttpStatus.UNAUTHORIZED);
     }
 
     async saveToken(userId: string, token: string) {
@@ -56,14 +74,14 @@ export class AuthService {
         throw new HttpException('Пользователь не найден.', HttpStatus.NOT_FOUND);
     }
 
-    // async checkIsAuth(token: string) {
-    //     const payload = this.jwtService.verify(token);
-    //     const user = await this.validateUser({email: payload.email, password: payload.password});
-        
-
-    //     return this.generateToken(user);
-
-    // }
+    async validateToken(token: string) {
+        try {
+            const data = this.jwtService.verify(token);
+            return data;
+        } catch (e) {
+            return null;
+        }
+    }
 
     private async generateToken(user: ViewUserDto) {
         const payload = {email: user.email, id: user.id, roles: user.roles};

@@ -14,10 +14,10 @@ export class RolesController {
 
     @ApiOperation({summary: 'Создать роль.'})
     @ApiResponse({status: 200, type: ViewRoleDto})
-    // @ApiBearerAuth()
-    // @Roles('admin')
-    // @UseGuards(RolesGuard)
-    // @UsePipes(ValidationPipe)
+    @ApiBearerAuth()
+    @Roles('admin')
+    @UseGuards(RolesGuard)
+    @UsePipes(ValidationPipe)
     @Post()
     createRole(@Body() dto: CreateRoleDto) {
         return this.roleService.create(dto);

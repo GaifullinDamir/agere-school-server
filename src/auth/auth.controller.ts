@@ -4,6 +4,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import { AuthUserDto } from 'src/users/dto/auth-user.dto';
 import { LogoutUserDto } from 'src/users/dto/logout-user.dto';
+import { RefreshUserDto } from 'src/users/dto/refresh-user.dto';
 
 @ApiTags('Авторизация')
 @Controller('auth')
@@ -30,6 +31,14 @@ export class AuthController {
     @Post('/logout')
     @UsePipes(ValidationPipe)
     logout(@Body() token: LogoutUserDto) {
+        return this.authService.logout(token.refreshToken);
+    }
+
+    @ApiOperation({summary: 'Рефреш пользователя.'})
+    @ApiResponse({status: 200})
+    @Post('/refresh')
+    @UsePipes(ValidationPipe)
+    refresh(@Body() token: RefreshUserDto) {
         return this.authService.logout(token.refreshToken);
     }
 
