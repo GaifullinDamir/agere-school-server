@@ -14,9 +14,9 @@ import { User } from 'src/users/users.model';
     forwardRef(() => UsersModule),
     JwtModule.register({
       secret: process.env.PRIVATE_KEY || 'SECRET',
-      signOptions: {
-        expiresIn: '30d'
-      }
+      // signOptions: {
+      //   expiresIn: '15s'
+      // }
     })
   ],
   exports: [

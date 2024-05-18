@@ -31,6 +31,7 @@ export class AuthController {
     @Post('/logout')
     @UsePipes(ValidationPipe)
     logout(@Body() token: LogoutUserDto) {
+        console.log('logout')
         return this.authService.logout(token.refreshToken);
     }
 
@@ -41,21 +42,4 @@ export class AuthController {
     refresh(@Param('token') token: string) {
         return this.authService.refresh(token);
     }
-
-    // @ApiOperation({summary: 'Рефреш пользователя.'})
-    // @ApiResponse({status: 200})
-    // @Get('/refresh/:token')
-    // @UsePipes(ValidationPipe)
-    // refresh(@Req() req: Request) {
-    //     return this.authService.refresh(token);
-    // }
-
-    
-
-    // @ApiOperation({summary: 'Проверка авторизции пользователя.'})
-    // @ApiResponse({status: 200})
-    // @Post('/check/:token')
-    // checkIsAuth(@Param('token') token: string) {
-    //     return this.authService.checkIsAuth(token);
-    // }
 }
