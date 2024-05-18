@@ -32,6 +32,25 @@ export class CoursesService {
         return coursesViews;
     }
 
+    async getAllTeacherCoursesWithPagination(actor: any, page: number, pageSize: number): Promise<ViewCourseDto[]> {
+        const authorId = actor.id;
+        const limit = pageSize; 
+        const offset = (page - 1) * pageSize;
+        const courses = await this.courseRepository.findAndCountAll({
+            limit: limit,
+            offset: offset,
+            where: {userId: authorId},
+            include: {all: true}
+        });
+        const coursesViews = [];
+        if (courses.count) {
+            courses.rows.forEach(course => {
+                coursesViews.push(new ViewCourseDto(course));
+            })
+        }
+        return coursesViews;
+    }
+
     async getAllWithPagination(page: number, pageSize: number): Promise<ViewCourseDto[]> {
         const limit = pageSize; 
         const offset = (page - 1) * pageSize;

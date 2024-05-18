@@ -43,6 +43,16 @@ export class CoursesController {
         return this.courseService.getAll();
     }
 
+    @ApiOperation({summary: 'Получить все курсы преподавателя с пагинацией.'})
+    @ApiResponse({status: 200, type: [Course]})
+    @ApiBearerAuth()
+    @Roles('admin', 'user')
+    @UseGuards(RolesGuard)
+    @Get('teacher/:page&:size')
+    getAllTeacherCourses(@GetUser() actor: any, @Param('page') page: number, @Param('size') size: number) {
+        return this.courseService.getAllTeacherCoursesWithPagination(actor, page, size);
+    }
+
     @ApiOperation({summary: 'Получить все курсы с пагинацией.'})
     @ApiResponse({status: 200})
     @ApiBearerAuth()
