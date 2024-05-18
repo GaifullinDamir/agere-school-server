@@ -7,6 +7,7 @@ import { User } from 'src/users/users.model';
 import { ViewUserDto } from 'src/users/dto/view-user.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { AuthUserDto } from 'src/users/dto/auth-user.dto';
+import { toUSVString } from 'util';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,7 @@ export class AuthService {
         
     async login(userDto: AuthUserDto) {
         const user = await this.validateUser(userDto);
-        const tokens = await this.generateToken(user);
+        const tokens = await this.generateTokens(user);
         await this.saveToken(user.id, tokens.refreshToken);
 
         return tokens;
@@ -33,7 +34,7 @@ export class AuthService {
         const hashPassword = await bcrypt.hash(userDto.password, 5);
         const user = await this.userService.create({...userDto, password: hashPassword});
 
-        const tokens = await this.generateToken(user);
+        const tokens = await this.generateTokens(user);
         await this.saveToken(user.id, tokens.refreshToken);
 
         return tokens;
@@ -42,7 +43,7 @@ export class AuthService {
     async logout(refreshToken: string) {
         const data = await this.validateToken(refreshToken);
         if (data) {
-            const user = await this.userRepository.findByPk(data.id);
+            const user = await this.userRepository.findByPk(data.id, {include: {all: true}});
             if (user) {
                 return user.update({refreshToken: ''});
             }
@@ -56,10 +57,11 @@ export class AuthService {
         }
         const data = await this.validateToken(refreshToken);
         if (data) {
-            const user = await this.userRepository.findByPk(data.id);
+            const user = await this.userRepository.findByPk(data.id, {include: {all: true}});
             if (user) {
-                const tokens = await this.generateToken(user);
+                const tokens = await this.generateTokens(user);
                 await user.update({refreshToken: tokens.refreshToken});
+
                 return tokens;
             }
         }
@@ -83,7 +85,7 @@ export class AuthService {
         }
     }
 
-    private async generateToken(user: ViewUserDto) {
+    private async generateTokens(user: ViewUserDto) {
         const payload = {email: user.email, id: user.id, roles: user.roles};
         const refreshPayload = {email: user.email, id: user.id}
         return {

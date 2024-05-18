@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { AuthService } from './auth.service';
@@ -36,11 +36,21 @@ export class AuthController {
 
     @ApiOperation({summary: 'Рефреш пользователя.'})
     @ApiResponse({status: 200})
-    @Post('/refresh')
+    @Get('/refresh/:token')
     @UsePipes(ValidationPipe)
-    refresh(@Body() token: RefreshUserDto) {
-        return this.authService.logout(token.refreshToken);
+    refresh(@Param('token') token: string) {
+        return this.authService.refresh(token);
     }
+
+    // @ApiOperation({summary: 'Рефреш пользователя.'})
+    // @ApiResponse({status: 200})
+    // @Get('/refresh/:token')
+    // @UsePipes(ValidationPipe)
+    // refresh(@Req() req: Request) {
+    //     return this.authService.refresh(token);
+    // }
+
+    
 
     // @ApiOperation({summary: 'Проверка авторизции пользователя.'})
     // @ApiResponse({status: 200})
