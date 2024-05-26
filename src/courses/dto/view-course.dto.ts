@@ -13,6 +13,9 @@ export class ViewCourseDto{
         this.rating = course.rating;
         this.isVisible = course.isVisible;
         this.userId = course.userId;
+        if (course.students) {
+            this.students = course.students.map(student => new ViewUserDto(student));
+        }
         if(course.author) {
             this.author = new ViewUserDto(course.author);
         }
@@ -49,6 +52,22 @@ export class ViewCourseDto{
 
     @ApiProperty({example: '8364800e-f6ac-11ee-a951-0242ac120002', description: 'id создателя курса.'})
     readonly userId: string;
+
+    @ApiProperty({
+        example: [{
+            "id": "dc255b20-f911-11ee-a962-23956c5947c1",
+            "name": "Андрей",
+            "surname": "Горохов",
+            "patronimic": "Сергеевич",
+            "logo": null,
+            "email": "andrew@mail.ru",
+            "password": "12345",
+            "createdAt": "2024-04-12T21:15:59.829Z",
+            "updatedAt": "2024-04-12T21:15:59.829Z"
+        }],
+        description: 'Студенты курса.'
+    })
+    readonly students: ViewUserDto[];
 
     @ApiProperty({
         example: {

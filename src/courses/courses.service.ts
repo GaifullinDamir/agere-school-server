@@ -14,9 +14,10 @@ export class CoursesService {
         private filesService: FilesService) {
     }
     async create(dto: CreateCourseDto, userId: string, image: Express.Multer.File): Promise<ViewCourseDto>{
+        console.log('------------------------------------------')
         const id = uuidv1();
         const {fileName, description} = await this.processData(dto, image);
-        const course = await this.courseRepository.create({... dto, id, userId, rating: 0, description, logo: fileName, isVisible: false});
+        const course = await this.courseRepository.create({... dto, id, userId, rating: 0, description, logo: fileName, isVisible: true});
 
         return new ViewCourseDto(course);
     }

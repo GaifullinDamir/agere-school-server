@@ -18,6 +18,6 @@ export class CreateCourseDto{
         })
     readonly description: string;
 
-    @ApiProperty({example: 'image.jpeg', description: 'Логотип курса. Отправлять файл.'})
-    readonly logo: string;
+    // @ApiProperty({example: 'image.jpeg', description: 'Логотип курса. Отправлять файл.'})
+    // readonly logo: string;
 }

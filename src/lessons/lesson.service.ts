@@ -44,7 +44,7 @@ export class LessonsService {
         if (lessons.length) {
             return lessons.map(lesson => new ViewLessonDto(lesson)).sort((l1, l2) => l1.position - l2.position);
         } 
-        throw new HttpException('Уроки не найдены.', HttpStatus.NOT_FOUND)
+        return [];
     }
 
     async getById(lessonId: string): Promise<ViewLessonDto> {

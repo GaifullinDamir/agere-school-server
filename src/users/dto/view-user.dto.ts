@@ -18,6 +18,9 @@ export class ViewUserDto {
             this.roles = user.roles.map(role => new ViewRoleDto(role));
         }
         
+        if (user.studentCourses) {
+            this.studentCourses = user.studentCourses.map(studentCourse => new ViewCourseDto(studentCourse));
+        }
         if (user.courses) {
             this.courses = user.courses.map(course => new ViewCourseDto(course)); 
         }
@@ -61,6 +64,9 @@ export class ViewUserDto {
             }
         }
     ], description: 'Роли пользователя.'})
+
+    readonly studentCourses: ViewCourseDto[];
+
     readonly roles: ViewRoleDto[];
 
     @ApiProperty({example: [

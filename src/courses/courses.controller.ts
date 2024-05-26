@@ -17,7 +17,7 @@ export class CoursesController {
     @ApiOperation({summary: 'Создать курс.'})
     @ApiResponse({status: 200, type: Course})
     @ApiBearerAuth()
-    @Roles("user")
+    @Roles("user", "admin")
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
     @Post()
@@ -30,7 +30,7 @@ export class CoursesController {
                 ]
             })
         ) logo: Express.Multer.File) {
-        return this.courseService.create(dto,user.id, logo);
+        return this.courseService.create(dto, user.id, logo);
     }
 
     @ApiOperation({summary: 'Получить все курсы.'})

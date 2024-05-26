@@ -10,7 +10,8 @@ export class CreateLessonDto {
     @IsJSON({message: 'description-должен быть JSON-файл.'})
     readonly description: string;
 
-    @ApiProperty({example: 'https://www.youtube.com/embed/_raVsypTkPI', description: 'Ссылка на видео в YT.'})    @IsString({message: 'ytVideoRef-должен быть строкой.'})
+    @ApiProperty({example: 'https://www.youtube.com/embed/_raVsypTkPI', description: 'Ссылка на видео в YT.'})    
+    @IsString({message: 'ytVideoRef-должен быть строкой.'})
     @IsOptional()
     readonly ytVideoRef: string;
 }

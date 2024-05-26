@@ -26,7 +26,7 @@ export class TasksController {
 
     @ApiOperation({summary: 'Получить все задачи урока.'})
     @ApiResponse({status: 200, type: [Task]})
-    @Get('lessons/:lessonId')
+    @Get('lesson/:lessonId')
     getAllTasks(@Param('lessonId') lessonId: string) {
         return this.taskService.getAll(lessonId);
     }

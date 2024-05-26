@@ -27,7 +27,7 @@ export class LearnModulesService {
             const module = await this.learnModuleRepository.create({id, courseId, position, ...dto})
             return module;
         }
-        throw new HttpException('Нет такого курса или у пользователя нет доступа к курса.',  HttpStatus.BAD_REQUEST);
+        throw new HttpException('Нет такого курса или у пользователя нет доступа к курсам.',  HttpStatus.BAD_REQUEST);
     }
 
     async getAll(courseId: string): Promise<ViewLearnModuleDto[]> {
@@ -37,7 +37,7 @@ export class LearnModulesService {
                 return module1.position - module2.position;
             });
         }
-        throw new HttpException('Модули не найдены.', HttpStatus.NOT_FOUND);
+        return [];
     }
 
     async getById(moduleId: string): Promise<ViewLearnModuleDto> {
