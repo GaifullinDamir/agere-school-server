@@ -63,6 +63,16 @@ export class CoursesController {
         return this.courseService.getAllWithPagination(page, size);
     }
 
+    @ApiOperation({summary: 'Получить все видимые крусы с пагинацией.'})
+    @ApiResponse({status: 200})
+    @ApiBearerAuth()
+    @Roles('admin', 'student')
+    @UseGuards(RolesGuard)
+    @Get('/student')
+    getAllStudentCourses(@GetUser() actor: any) {
+        return this.courseService.getAllStudentCourse(actor);
+    }
+
     @ApiOperation({summary: 'Получить курс по id.'})
     @ApiResponse({status: 200, type: Course})
     @Get('/:id')
@@ -76,6 +86,8 @@ export class CoursesController {
     getAllVisibleCoursesWithPagination(@Param('page') page: number, @Param('size') size: number) {
         return this.courseService.getAllVisibleWithPagination(page, size);
     }
+
+    
 
     @ApiOperation({summary: 'Изменить курс.'})
     @ApiResponse({status: 200, type: [Number]})

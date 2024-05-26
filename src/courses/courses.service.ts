@@ -6,12 +6,14 @@ import { FilesService } from 'src/files/files.service';
 import { v1 as uuidv1 } from 'uuid';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { ViewCourseDto } from './dto/view-course.dto';
+import { User } from 'src/users/users.model';
 
 @Injectable()
 export class CoursesService {
 
     constructor(@InjectModel(Course) private courseRepository: typeof Course,
-        private filesService: FilesService) {
+        private filesService: FilesService,
+        @InjectModel(User) private userRepository: typeof User) {
     }
     async create(dto: CreateCourseDto, userId: string, image: Express.Multer.File): Promise<ViewCourseDto>{
         console.log('------------------------------------------')
@@ -97,6 +99,27 @@ export class CoursesService {
         }
         return coursesViews;
     }
+
+    async getAllStudentCourse(actor: any): Promise<ViewCourseDto[]> {
+        const currentStudent = await this.userRepository.findByPk(actor.id, {include: {all: true}});
+        if (currentStudent) {
+            const courses = await this.courseRepository.findAll({
+                include: {all: true},
+            });
+            let studentCourses = [];
+            if (courses) {
+                studentCourses = courses.filter(course => course.students.find(student => student.id === currentStudent.id) );
+            }
+            const coursesViews = [];
+            if (studentCourses.length) {
+                studentCourses.forEach(course => {
+                    coursesViews.push(new ViewCourseDto(course));
+                })
+            }
+            return coursesViews;
+        }
+        throw new HttpException('Стдуент не найден.', HttpStatus.NOT_FOUND);
+    };
 
     async getById(id: string): Promise<ViewCourseDto>{
         const course = await this.courseRepository.findOne({

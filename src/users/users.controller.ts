@@ -109,7 +109,7 @@ export class UsersController {
     @ApiOperation({summary: 'Подписаться на курс.'})
     @ApiResponse({status: 200})
     @ApiBearerAuth()
-    @Roles('user')
+    @Roles('user', 'admin')
     @UseGuards(RolesGuard)
     @Post('/course/:id')
     subscribeToCurse(@Param('id') courseId: string, @GetUser() actor: any) {
