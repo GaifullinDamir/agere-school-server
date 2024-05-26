@@ -100,7 +100,7 @@ export class CoursesService {
         return coursesViews;
     }
 
-    async getAllStudentCourse(actor: any): Promise<ViewCourseDto[]> {
+    async getAllStudent(actor: any): Promise<ViewCourseDto[]> {
         const currentStudent = await this.userRepository.findByPk(actor.id, {include: {all: true}});
         if (currentStudent) {
             const courses = await this.courseRepository.findAll({
@@ -120,6 +120,29 @@ export class CoursesService {
         }
         throw new HttpException('Стдуент не найден.', HttpStatus.NOT_FOUND);
     };
+
+    async getAllStudentWithPagination(actor: any, page: number, pageSize: number): Promise<ViewCourseDto[]> {
+        const currentStudent = await this.userRepository.findByPk(actor.id, {include: {all: true}});
+        if (currentStudent) {
+            const courses = await this.courseRepository.findAll({
+                include: {all: true},
+            });
+            let studentCourses = [];
+            const minIndex: number = (page - 1) * +pageSize;
+            const maxIndex: number = minIndex + +pageSize;
+            if (courses) {
+                studentCourses = courses.filter(course => course.students.find(student => student.id === currentStudent.id)).slice(minIndex, maxIndex);
+            }
+            const coursesViews = [];
+            if (studentCourses.length) {
+                studentCourses.forEach(course => {
+                    coursesViews.push(new ViewCourseDto(course));
+                })
+            }
+            return coursesViews;
+        }
+        throw new HttpException('Стдуент не найден.', HttpStatus.NOT_FOUND);
+    }
 
     async getById(id: string): Promise<ViewCourseDto>{
         const course = await this.courseRepository.findOne({

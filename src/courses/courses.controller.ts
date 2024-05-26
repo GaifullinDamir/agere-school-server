@@ -70,7 +70,17 @@ export class CoursesController {
     @UseGuards(RolesGuard)
     @Get('/student')
     getAllStudentCourses(@GetUser() actor: any) {
-        return this.courseService.getAllStudentCourse(actor);
+        return this.courseService.getAllStudent(actor);
+    }
+
+    @ApiOperation({summary: 'Получить все курсы студента с пагинацией.'})
+    @ApiResponse({status: 200})
+    @ApiBearerAuth()
+    @Roles('admin', 'user')
+    @UseGuards(RolesGuard)
+    @Get('student/:page&:size')
+    getAllStudentCoursesWithPagination(@GetUser() actor: any, @Param('page') page: number, @Param('size') size: number) {
+        return this.courseService.getAllStudentWithPagination(actor, page, size);
     }
 
     @ApiOperation({summary: 'Получить курс по id.'})
