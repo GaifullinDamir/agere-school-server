@@ -24,6 +24,16 @@ export class AttemptsController {
         return this.attemptService.create(actor, taskId, dto);
     }
 
+    @ApiOperation({summary: 'Получить попыкти всех задач урока по id.'})
+    @ApiResponse({status: 200, type: Attempt})
+    @ApiBearerAuth()
+    @Roles('admin', 'user')
+    @UseGuards(RolesGuard)
+    @Get('lesson/:lessonId')
+    getLessonAttempts(@GetUser() actor: any, @Param('lessonId') lessonId: string) {
+        return this.attemptService.getAllByLessonId(actor, lessonId);
+    }
+
     @ApiOperation({summary: 'Получить попытку по id задачи.'})
     @ApiResponse({status: 200, type: Attempt})
     @ApiBearerAuth()
@@ -33,6 +43,8 @@ export class AttemptsController {
     getAttempt(@GetUser() actor: any, @Param('taskId') taskId: string) {
         return this.attemptService.getByTaskId(actor, taskId);
     }
+
+    
 
     @ApiOperation({summary: 'Изменить попытку по id задачи.'})
     @ApiResponse({status: 200, type: Attempt})

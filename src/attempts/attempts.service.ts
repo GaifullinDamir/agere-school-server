@@ -44,6 +44,27 @@ export class AttemptsService {
         throw new HttpException("Задача не найдена.", HttpStatus.NOT_FOUND);
     }
 
+    async getAllByLessonId(actor: any, lessonId: string): Promise<ViewAttemptDto[]> {
+        const tasks = await this.taskRepository.findAll({
+            where: {lessonId: lessonId},
+            include: {all: true}
+        });
+        if (tasks.length) {
+            const attempts = [];
+            tasks.map(async (task) => {
+                const attempt = await this.attemptRepository.findOne({where: {
+                    userId: actor.id,
+                    taskId: task.id
+                }});
+                if (attempt) {
+                    attempts.push(new ViewAttemptDto(attempt));
+                }
+            })
+            return attempts;
+        }
+        return [];
+    }
+
     async getByTaskId(actor: any, taskId: string): Promise<ViewAttemptDto> {
         const attempt = await this.attemptRepository.findOne({where: {
             userId: actor.id,
@@ -52,7 +73,7 @@ export class AttemptsService {
         if (attempt) {
             return new ViewAttemptDto(attempt);
         }
-        throw new HttpException('Попытка не найдена.', HttpStatus.NOT_FOUND);
+        // throw new HttpException('Попытка не найдена.', HttpStatus.NOT_FOUND);
     }
 
     async update(actor: any, taskId: string, dto: UpdateAttemptDto) {
