@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { BelongsTo, Column, DataType, ForeignKey, HasOne, Model, Table } from "sequelize-typescript";
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript";
 import { Attempt } from "src/attempts/attempts.model";
 import { Lesson } from "src/lessons/lesson.model";
 
@@ -39,6 +39,6 @@ export class Task extends Model<Task, TaskCreationAttributes> {
     @BelongsTo(() => Lesson)
     lesson: Lesson;
 
-    @HasOne(() => Attempt)
+    @HasMany(() => Attempt)
     attempt: Attempt;
 }

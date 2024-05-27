@@ -41,6 +41,7 @@ export class TasksService {
 
     async getAll(lessonId: string): Promise<ViewTaskDto[]> {
         const tasks = await this.taskRepository.findAll({where: {lessonId}, include: {all: true}});
+        console.log(tasks)
         if (tasks.length) {
             return tasks.map(task => new ViewTaskDto(task)).sort((t1, t2) => t1.position - t2.position);
         }

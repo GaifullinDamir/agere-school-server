@@ -60,12 +60,11 @@ export class AttemptsService {
                 
                 if (attempt) {
                     return new ViewAttemptDto(attempt);
-                } else {
-
                 }
             })
             let result = await Promise.all(attempts);
             result = result.filter(item => item);
+            console.log(result)
             return result;
         }
         return [];
