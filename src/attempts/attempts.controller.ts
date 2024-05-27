@@ -53,7 +53,7 @@ export class AttemptsController {
     @UseGuards(RolesGuard)
     @UsePipes(ValidationPipe)
     @Put('/:taskId')
-    updateAttempt(@GetUser() actor: any, @Param('taskId') taskId: string, dto: UpdateAttemptDto) {
+    updateAttempt(@GetUser() actor: any, @Param('taskId') taskId: string, @Body() dto: UpdateAttemptDto) {
         return this.attemptService.update(actor, taskId, dto);
     }
 }

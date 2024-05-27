@@ -44,7 +44,7 @@ export class TasksService {
         if (tasks.length) {
             return tasks.map(task => new ViewTaskDto(task)).sort((t1, t2) => t1.position - t2.position);
         }
-        throw new HttpException('Задачи не найдены.', HttpStatus.NOT_FOUND);
+        return [];
     }
 
     async getById(taskId: string): Promise<ViewTaskDto> {
