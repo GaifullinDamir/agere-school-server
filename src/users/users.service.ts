@@ -120,11 +120,10 @@ export class UsersService {
     async pickupRole(id: string, dto: PickupRoleDto): Promise<PickupRoleDto> {
         const user = await this.userRepository.findByPk(id);
         const role = await this.roleRepository.findOne({
-            where: {value: 'user'},
+            where: {value: dto.value},
             include: {all: true}
         });
         if (role && user) {
-
             await user.$remove('roles', role.id);
             return dto;
         }
